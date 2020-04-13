@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {"type": "integer"},
+    "iamid": {"type": "string"},
+    "name": {"type": "string"},
+    "gid": {"type": ["null", "string"]},
+    "email": {"type": ["null", "string"]},
+    "authorizations": {
+      "type": ["null", "object"]
+    },
+    "description": {"type": ["null", "string"]},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": ["null", "string"], "format": "date-time"}
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {"type": "string"},
+    "id": {"type": "integer"},
+    "recordFormat": {"type": "string"},
+    "deleted": {"type": "boolean"},
+    "description": {"type": ["null", "string"]},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "subscriptionPolicy": {
+      "type": ["null", "object"],
+      "properties": {
+        "type": {"type": "string"}
+      }
+    },
+    "subscribers": {"type": "string"},
+    "recordCount": {"type": "integer"},
+    "status": {"type": "string"},
+    "subscriptionStatus": {"type": "string"},
+    "blobHandlerType": {"type": "string"},
+    "subscriptionType": {"type": "string"},
+    "connectionString": {"type": "string"},
+    "policy": {"type": ["null", "string"]},
+    "policyHandlerType": {"type": ["null", "string"]},
+    "native": {"type": ["null", "string"]}
+  }
+}

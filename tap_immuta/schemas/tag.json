@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "deleted": {"type": "boolean"},
+    "id": {"type": "integer"},
+    "name": {"type": "string"},
+    "source": {"type": "string"},
+    "systemCreated": {"type": "boolean"}
+  }
+}

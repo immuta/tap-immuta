@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "id": {"type": "integer"},
+    "name": {"type": "string"},
+    "acknowledgement": {"type": "string"},
+    "description": {"type": ["null", "string"]},
+    "addedByProfile": {"type": "integer"},
+    "displayAcknowledgement": {"type": "boolean"},
+    "deleted": {"type": "boolean"},
+    "systemGenerated": {"type": "boolean"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  }
+}

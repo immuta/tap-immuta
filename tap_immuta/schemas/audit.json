@@ -1,0 +1,20 @@
+{
+  "properties": {
+    "dateTime": {"type": "string", "format": "date-time"},
+    "dataSourceName": {"type": ["null", "string"]},
+    "projectName": {"type": ["null", "string"]},
+    "recordType": {"type": "string"},
+    "blobId": {"type": ["null", "string"]},
+    "userId": {"type": ["null", "string"]},
+    "profileId": {"type": ["null", "integer"]},
+    "purposeIds": {
+      "type": ["null", "array"],
+      "items": {"value": "integer"}
+    },
+    "success": {"type": "boolean"},
+    "failureReason": {"type": ["null", "string"]},   
+    "id": {"type": "string"},
+    "fingerprintVersionName": {"type": ["null", "string"]},   
+    "email": {"type": ["null", "string"]}
+  }
+}
