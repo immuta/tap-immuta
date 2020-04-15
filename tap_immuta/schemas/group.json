@@ -7,7 +7,10 @@
     "gid": {"type": ["null", "string"]},
     "email": {"type": ["null", "string"]},
     "authorizations": {
-      "type": ["null", "object"]
+      "type": ["null", "object"],
+      "properties": {
+        "name": {"type": "string"}
+      }
     },
     "description": {"type": ["null", "string"]},
     "createdAt": {"type": "string", "format": "date-time"},

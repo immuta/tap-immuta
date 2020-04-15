@@ -1,6 +1,6 @@
 {
   "properties": {
-    "dateTime": {"type": "string", "format": "date-time"},
+    "dateTime": {"type": "string"},
     "dataSourceName": {"type": ["null", "string"]},
     "projectName": {"type": ["null", "string"]},
     "recordType": {"type": "string"},

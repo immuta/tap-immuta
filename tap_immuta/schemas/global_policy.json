@@ -12,7 +12,7 @@
     "createdAt": {"type": "string", "format": "date-time"},
     "updatedAt": {"type": "string", "format": "date-time"},
     "certification": {
-      "type": "object",
+      "type": ["null", "object"],
       "properties": {
         "text": {"type": "string"},
         "label": {"type": "string"},
@@ -27,8 +27,13 @@
       "items": {
         "type": "object",
         "properties": {
-          "type": {"type": "string"},
-          "rules": {"type": "object"},
+          "type": {"type": ["null", "string"]},
+          "rules": {
+            "type": ["null", "object"],
+            "properties": {
+              "type": {"type": "string"}
+            }
+          },
           "description": {"type": ["null", "string"]}
         }
       }

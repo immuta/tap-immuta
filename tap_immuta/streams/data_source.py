@@ -7,13 +7,13 @@ from tap_immuta.streams import cache as stream_cache
 LOGGER = singer.get_logger()  # noqa
 
 
-class UserStream(BaseStream):
+class DataSourceStream(BaseStream):
     API_METHOD = 'GET'
-    TABLE = 'user'
+    TABLE = 'data_source'
     KEY_PROPERTIES = ['id']
 
     CACHE_RESULTS = True
 
     @property
     def path(self):
-        return f"/bim/user"
+        return f"/dataSource"

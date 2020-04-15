@@ -2,13 +2,16 @@
 
 **Author**: Stephen Bailey (sbailey@immuta.com)
 
-This is a [Singer](http://singer.io) tap that produces JSON-formatted data following the [Singer spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md). It can generate a catalog of available data in Immuta Accounts and extract the following resources:
+This is a [Singer](http://singer.io) tap that produces JSON-formatted data following the [Singer spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md). It can generate a catalog of available data in Immuta and extract the following resources:
 
-- Data Source - [API](https://instance.immuta.com/api/dataSource)
-- Project - [API](https://instance.immuta.com/api/project)
-- Built-in Groups - [API](https://instance.immuta.com/api/bim/group)
-- Built-in Users - [API](https://instance.immuta.com/api/bim/user)
-- Purpose - [API](https://instance.immuta.com/api/governance/purpose)-resource
+- Audit Records
+- Data Source
+- Global Policies
+- Groups
+- Projects
+- Purposes
+- Tags
+- Users
 
 ## Quick Start
 
@@ -42,10 +45,11 @@ tap-immuta -c config.json --catalog catalog.json
 
 The following configuration options are available:
 
-- `api-key` (required): Immuta Accounts API token
+- `api-key` (required): User-generated Immuta API Key
+- `immuta-host` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
 - `start-date` (optional): should be used on first sync to indicate how far back to grab records. Start dates should conform to the RFC3339 specification.
 - `user-agent` (optional): should be set to something that includes a contact email address should the API provider need to contact you for any reason.
 
 ---
 
-Copyright &copy; 2019 Immuta
+Copyright &copy; 2020 Immuta

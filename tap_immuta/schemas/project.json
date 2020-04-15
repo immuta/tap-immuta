@@ -13,8 +13,8 @@
     "name": {"type": "string"},
     "purposeCount": {"type": "integer"},
     "status": {"type": "string"},
-    "subscriptionType": {"type": "integer"},
-    "subscriptionStatus": {"type": "integer"},
+    "subscriptionType": {"type": "string"},
+    "subscriptionStatus": {"type": "string"},
     "updatedAt": {"type": "string", "format": "date-time"},
     "subscriptionPolicy": {
       "type": ["null", "object"],
@@ -22,16 +22,29 @@
         "type": {"type": "string"},
         "approvals": {
           "type": ["null", "array"],
-          "items": {"type": "object"}
+          "items": {
+            "type": "object",
+            "properties": {
+              "replace_me": {"type": "string"}
+            }
+          }
         },
         "exceptions": {
           "type": ["null", "array"],
-          "items": {"type": "object"}
+          "items": {
+            "type": "object",
+            "properties": {
+              "replace_me": {"type": "string"}
+            }
+          }
         }
       }
     },
     "workspace": {
-      "type": ["null", "object"]
+      "type": ["null", "object"],
+      "properties": {
+        "replace_me": {"type": "string"}
+      }
     }
   }
 }
