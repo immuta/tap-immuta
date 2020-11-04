@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "count": {"type": "integer"},
+    "users": {
+      "type": "array",
+      "items": {
+        "profile": {"type": "integer"},
+        "name": {"type": "string"},
+        "iamid": {"type": "string"},
+        "userid": {"type": "string"},
+        "email": {"type": "string"},
+        "type": {"type": "string"},
+        "admin": {"type": "string"},
+        "approved": {"type": "integer"},
+        "state": {"type": "string"},
+        "systemGenerated": {"type": "integer"},
+        "lastExternalRefresh": {"type": "string", "format": "date-time"},
+        "subscriptionId": {"type": "integer"},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "updatedAt": {"type": "string", "format": "date-time"},
+        "approvals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "requiredPermission": {"type": "string"},
+              "state": {"type": "string"},
+              "approverId": {"type": ["null", "integer"]},
+              "approver": {"type": "string"},
+              "ownerModelName": {"type": ["null", "string"]}
+            }
+          }
+        },
+        "currentUserCanApprove": {"type": "boolean"}
+      }
+    }
+  }
+}

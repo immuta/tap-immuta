@@ -2,6 +2,8 @@ import singer
 
 from tap_immuta.streams.base import BaseStream
 from tap_immuta.streams import cache as stream_cache
+from tap_immuta.state import save_state
+
 
 
 LOGGER = singer.get_logger()  # noqa
@@ -9,14 +11,46 @@ LOGGER = singer.get_logger()  # noqa
 
 class DataSourceSubscriptionStream(BaseStream):
     API_METHOD = 'GET'
-    TABLE = 'data_source'
+    TABLE = 'data_source_subscription'
     KEY_PROPERTIES = ['id']
 
     CACHE_RESULTS = True
 
-    self.data_source_ids = self.make
+    def get_url(self, data_source_id):
+        "Return the URL to hit for data from this stream."
+        base = self.get_url_base()
+        path = f"/dataSource/{data_source_id}/access"
+        return f"{base}{path}"
 
-    @property
-    def path_list(self):
-        return f"/dataSource/1/access"
-        
+    def get_data_source_ids(self):
+        page = 0
+        counter = 9999
+        url = f"{self.get_url_base()}/dataSource"
+        data_source_ids = []
+        while len(data_source_ids) < counter:
+            params = {"offset": page, "size": 200}
+            response = self.client.make_request(url, "GET", params=params)
+            data_source_ids.extend([ii.get("id") for ii in response["hits"]])
+            page += 1
+            counter = response["count"]
+        LOGGER.info("Found %s Data Sources.", counter)
+        return data_source_ids
+
+    def sync_data(self):
+        table = self.TABLE
+
+        child_list = self.get_data_source_ids()
+        resources = list()
+        for child_id in child_list:
+            url = self.get_url(child_id)
+            LOGGER.info("Syncing data for %s %s at %s", table, child_id, url)
+            resources.extend(self.sync_paginated(url))
+
+        if self.CACHE_RESULTS:
+            stream_cache.add(table, resources)
+            LOGGER.info("Added %s %s to cache", len(resources), table)
+
+        LOGGER.info("Reached end of stream, moving on.")
+        save_state(self.state)
+        return self.state
+
