@@ -17,5 +17,6 @@ setuptools.setup(
     package_data = {
         "schemas": ["tap_immuta/schemas/*.json"]
     },
+    install_requires=["singer-python", "requests"],
     include_package_data=True,
 )
