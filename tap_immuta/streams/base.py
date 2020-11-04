@@ -41,7 +41,7 @@ class BaseStream:
         base = self.get_url_base()
         return f"{base}{self.path}"
 
-    def get_params(self, page=1):
+    def get_params(self, page=0):
         return {"size": 100, "offset": page}
 
     def get_class_path(self):
@@ -58,7 +58,7 @@ class BaseStream:
         return self.load_schema_by_name(self.TABLE)
 
     def get_stream_data(self, result):
-        """Given a result set from Campaign Monitor, return the data
+        """Given a result set, return the data
         to be persisted for this stream.
         """
         return [
@@ -91,7 +91,7 @@ class BaseStream:
         mdata = singer.metadata.write(mdata,
             (),
             'selected-by-default',
-            True
+            False
         )
 
         for field_name, field_schema in schema.get('properties').items():
@@ -110,7 +110,7 @@ class BaseStream:
                 mdata,
                 ('properties', field_name),
                 'selected-by-default',
-                True
+                False
             )
 
         return [{
@@ -157,8 +157,7 @@ class BaseStream:
         LOGGER.info("Syncing data for {}".format(table))
 
         url = self.get_url()
-        params = self.get_params()
-        resources = self.sync_paginated(url, params)
+        resources = self.sync_paginated(url)
 
         if self.CACHE_RESULTS:
             stream_cache.add(table, resources)
@@ -168,14 +167,11 @@ class BaseStream:
         save_state(self.state)
         return self.state
 
-    def sync_paginated(self, url, params):
-        # Immuta Accounts returns two fields in its API
-        # - data: an array of result objects of max size "size"
-        # - totalEntries: the total number of records meeting the search result
-        # Should iterate if number of results >= page size
+    def sync_paginated(self, url):
         table = self.TABLE
         _next = True
-        page = 1
+        page = 0
+        params = self.get_params(page) 
 
         all_resources = []
         while _next is not None:
@@ -189,6 +185,9 @@ class BaseStream:
             elif "purposes" in result.keys():
                 data = self.get_stream_data(result["purposes"])
                 total_records = int(result.get("count"))
+            elif "users" in result.keys():
+                data = self.get_stream_data(result["users"])
+                total_records = int(result.get("count"))
 
             with singer.metrics.record_counter(endpoint=table) as counter:
                 singer.write_records(table, data)
@@ -197,11 +196,11 @@ class BaseStream:
 
             LOGGER.info("Synced page %s for %s (%s records)", 
                 page, self.TABLE, len(all_resources))
-            if len(all_resources) <= total_records:
+            if len(all_resources) == total_records:
                 _next = None
             else:
                 page += 1
-                params["offset"] = page 
+                params = self.get_params(page) 
         return all_resources
 
 
