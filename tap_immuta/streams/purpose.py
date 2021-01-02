@@ -11,6 +11,7 @@ class PurposeStream(BaseStream):
     API_METHOD = 'GET'
     TABLE = 'purpose'
     KEY_PROPERTIES = ['id']
+    RESPONSE_RESULT_KEY = "purposes"
 
     CACHE_RESULTS = True
 

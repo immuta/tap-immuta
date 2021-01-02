@@ -21,6 +21,7 @@ class BaseStream:
     # GLOBAL PROPERTIES
     TABLE = None
     KEY_PROPERTIES = ["id"]
+    RESPONSE_RESULT_KEY = None
     API_METHOD = 'GET'
     REQUIRES = []
     CACHE_RESULTS = False
@@ -61,6 +62,9 @@ class BaseStream:
         """Given a result set, return the data
         to be persisted for this stream.
         """
+        if not isinstance(result, list):
+            raise TypeError(f"Result must be list. Got: {result}")
+
         return [
             self.transform_record(record)
             for record in result
@@ -78,60 +82,56 @@ class BaseStream:
     def matches_catalog(cls, stream_catalog):
         return stream_catalog.stream == cls.TABLE
 
-    def generate_catalog(self):
+    def generate_catalog(self, selected_by_default=True):
         schema = self.get_schema()
         mdata = singer.metadata.new()
 
+        mdata = singer.metadata.write(mdata, (), "inclusion", "available")
         mdata = singer.metadata.write(
-            mdata,
-            (),
-            'inclusion',
-            'available'
-        )
-        mdata = singer.metadata.write(mdata,
-            (),
-            'selected-by-default',
-            False
+            mdata, (), "selected-by-default", selected_by_default
         )
 
-        for field_name, field_schema in schema.get('properties').items():
-            inclusion = 'available'
+        for field_name in schema.get("properties").keys():
+            inclusion = "available"
 
             if field_name in self.KEY_PROPERTIES:
-                inclusion = 'automatic'
+                inclusion = "automatic"
 
             mdata = singer.metadata.write(
-                mdata,
-                ('properties', field_name),
-                'inclusion',
-                inclusion
+                mdata, ("properties", field_name), "inclusion", inclusion
             )
             mdata = singer.metadata.write(
                 mdata,
-                ('properties', field_name),
-                'selected-by-default',
-                False
+                ("properties", field_name),
+                "selected-by-default",
+                selected_by_default,
             )
 
-        return [{
-            'tap_stream_id': self.TABLE,
-            'stream': self.TABLE,
-            'key_properties': self.KEY_PROPERTIES,
-            'schema': self.get_schema(),
-            'metadata': singer.metadata.to_list(mdata)
-        }]
+        return [
+            {
+                "tap_stream_id": self.TABLE,
+                "stream": self.TABLE,
+                "key_properties": self.KEY_PROPERTIES,
+                "schema": self.get_schema(),
+                "metadata": singer.metadata.to_list(mdata),
+            }
+        ]
+
 
     def transform_record(self, record):
         with singer.Transformer() as tx:
             metadata = {}
 
+            if not isinstance(record, dict):
+                raise TypeError(f'Record must be dict. got: {record}')
+
             if self.catalog.metadata is not None:
                 metadata = singer.metadata.to_map(self.catalog.metadata)
 
             return tx.transform(
-                record,
-                self.catalog.schema.to_dict(),
-                metadata)
+                    record,
+                    self.catalog.schema.to_dict(),
+                    metadata)
 
     def get_catalog_keys(self):
         return list(self.catalog.schema.properties.keys())
@@ -176,18 +176,25 @@ class BaseStream:
         all_resources = []
         while _next is not None:
             result = self.client.make_request(url, self.API_METHOD, params=params)
-            if type(result) is list:
+
+            # Streams where the result contains a record list under a key
+            if isinstance(result, dict) and self.RESPONSE_RESULT_KEY is not None:
+                LOGGER.debug(f"Retrieving records from response field: {self.RESPONSE_RESULT_KEY}")
+                records = result[self.RESPONSE_RESULT_KEY]
+                data = self.get_stream_data(records)
+                total_records = int(result.get("count"))
+
+            # API directly returns record list
+            elif isinstance(result, list):
+                LOGGER.debug(f"Retrieving records from response list")
                 data = self.get_stream_data(result)
                 total_records = len(data)
-            elif "hits" in result.keys():
-                data = self.get_stream_data(result["hits"])
-                total_records = int(result.get("count"))
-            elif "purposes" in result.keys():
-                data = self.get_stream_data(result["purposes"])
-                total_records = int(result.get("count"))
-            elif "users" in result.keys():
-                data = self.get_stream_data(result["users"])
-                total_records = int(result.get("count"))
+
+            # API returns a single record
+            else:
+                LOGGER.debug("Using response as individual record.")
+                data = self.get_stream_data([result])
+                total_records = len(data)
 
             with singer.metrics.record_counter(endpoint=table) as counter:
                 singer.write_records(table, data)

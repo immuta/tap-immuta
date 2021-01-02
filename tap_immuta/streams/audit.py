@@ -11,8 +11,9 @@ class AuditStream(BaseStream):
     API_METHOD = 'GET'
     TABLE = 'audit'
     KEY_PROPERTIES = ['id']
+    RESPONSE_RESULT_KEY = "hits"
 
-    CACHE_RESULTS = True
+    CACHE_RESULTS = False
 
     RECORD_TYPES = [
         'blobVisibility',
