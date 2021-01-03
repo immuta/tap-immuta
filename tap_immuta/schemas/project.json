@@ -1,50 +1,174 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "acknowledgeRequired": {"type": "boolean"},
-    "allowMaskedJoins": {"type": "boolean"},
-    "createdAt": {"type": "string", "format": "date-time"},
-    "deleted": {"type": "boolean"},
-    "description": {"type": ["null", "string"]},
-    "filterId": {"type": "integer"},
-    "hasDeletedPurposes": {"type": "boolean"},
-    "id": {"type": "integer"},
-    "isEqualized": {"type": "boolean"},
-    "name": {"type": "string"},
-    "purposeCount": {"type": "integer"},
-    "status": {"type": "string"},
-    "subscriptionType": {"type": "string"},
-    "subscriptionStatus": {"type": "string"},
-    "updatedAt": {"type": "string", "format": "date-time"},
-    "subscriptionPolicy": {
-      "type": ["null", "object"],
-      "properties": {
-        "type": {"type": "string"},
-        "approvals": {
-          "type": ["null", "array"],
+      "id": {
+          "type": "integer"
+      },
+      "projectKey": {
+          "type": "string"
+      },
+      "name": {
+          "type": "string"
+      },
+      "status": {
+          "type": "string"
+      },
+      "description": {
+          "type": "string"
+      },
+      "documentation": {
+          "type": "string"
+      },
+      "deleted": {
+          "type": "boolean"
+      },
+      "allowMaskedJoins": {
+          "type": "boolean"
+      },
+      "subscriptionType": {
+          "type": "string"
+      },
+      "subscriptionPolicy": {
+          "type": ["object", "null"]
+      },
+      "equalization": {
+          "type": "object",
+          "properties": {
+              "setNone": {
+                  "type": "boolean"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "recommended": {
+                  "type": "string"
+              },
+              "validationFrequency": {
+                  "type": "integer"
+              },
+              "authsForPolicyHandler": {
+                  "type": "object",
+                  "properties": {
+                      "groups": {
+                          "type": "array",
+                          "items": {}
+                      },
+                      "authorizations": {
+                          "type": "object",
+                          "additionalProperties": true
+                      }
+                  },
+                  "additionalProperties": true
+              }
+          },
+          "additionalProperties": true
+      },
+      "workspace": {
+          "type": ["object", "null"]
+      },
+      "snowflake": {
+          "type": ["object", "null"]
+      },
+      "createdBy": {
+          "type": "integer"
+      },
+      "updatedBy": {
+          "type": "integer"
+      },
+      "createdAt": {
+          "type": "string"
+      },
+      "updatedAt": {
+          "type": "string"
+      },
+      "subscribedAsUser": {
+          "type": "boolean"
+      },
+      "subscriptionId": {
+          "type": "integer"
+      },
+      "acknowledgeRequired": {
+          "type": "boolean"
+      },
+      "subscriptionStatus": {
+          "type": "string"
+      },
+      "requestedState": {
+          "type": "string"
+      },
+      "approved": {
+          "type": "boolean"
+      },
+      "subscriptionExpiration": {
+          "type": ["string", "null"]
+      },
+      "filterId": {
+          "type": "integer"
+      },
+      "purposeCount": {
+          "type": ["integer", "null"]
+      },
+      "hasSqlAccount": {
+          "type": "boolean"
+      },
+      "purposes": {
+          "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "replace_me": {"type": "string"}
-            }
+              "anyOf": [
+                  {
+                      "type": "object",
+                      "properties": {
+                          "id": {
+                              "type": "integer"
+                          },
+                          "name": {
+                              "type": "string"
+                          },
+                          "acknowledgement": {
+                              "type": "string"
+                          },
+                          "description": {
+                              "type": ["string", "null"]
+                          },
+                          "addedByProfile": {
+                              "type": "integer"
+                          },
+                          "displayAcknowledgement": {
+                              "type": "boolean"
+                          },
+                          "deleted": {
+                              "type": "boolean"
+                          },
+                          "systemGenerated": {
+                              "type": "boolean"
+                          },
+                          "policyMetadata": {
+                              "type": ["object", "null"]
+                          },
+                          "createdAt": {
+                              "type": "string"
+                          },
+                          "updatedAt": {
+                              "type": "string"
+                          },
+                          "createdBy": {
+                              "type": "integer"
+                          }
+                      },
+                      "additionalProperties": true
+                  }
+              ]
           }
-        },
-        "exceptions": {
-          "type": ["null", "array"],
-          "items": {
-            "type": "object",
-            "properties": {
-              "replace_me": {"type": "string"}
-            }
-          }
-        }
+      },
+      "stagedPurposes": {
+          "type": "array",
+          "items": {}
+      },
+      "tags": {
+          "type": "array",
+          "items": {}
       }
-    },
-    "workspace": {
-      "type": ["null", "object"],
-      "properties": {
-        "replace_me": {"type": "string"}
-      }
-    }
-  }
+  },
+  "additionalProperties": true
 }
