@@ -15,7 +15,7 @@ class immutaRunner(Runner):
 
 @singer.utils.handle_top_exception(LOGGER)
 def main():
-    args = singer.utils.parse_args(required_config_keys=['api_key'])
+    args = singer.utils.parse_args(required_config_keys=['api_key', 'immuta_host', 'start_date'])
     client = ImmutaClient(args.config)
     runner = immutaRunner(args, client, AVAILABLE_STREAMS)
 
