@@ -1,27 +1,140 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "name": {"type": "string"},
-    "id": {"type": "integer"},
-    "recordFormat": {"type": "string"},
-    "deleted": {"type": "boolean"},
-    "description": {"type": ["null", "string"]},
-    "createdAt": {"type": "string", "format": "date-time"},
-    "subscriptionPolicy": {
-      "type": ["null", "object"],
-      "properties": {
-        "type": {"type": "string"}
+      "name": {
+          "type": ["string", "null"]
+      },
+      "recordFormat": {
+          "type": ["string", "null"]
+      },
+      "description": {
+          "type": ["string", "null"]
+      },
+      "policyHandler": {
+          "type": ["null", "object"],
+          "additionalProperties": true
+      },
+      "sqlSchemaName": {
+          "type": ["string", "null"]
+      },
+      "sqlTableName": {
+          "type": ["string", "null"]
+      },
+      "blobHandler": {
+        "type": ["null", "object"],
+        "additionalProperties": true
+      },
+      "createdBy": {
+          "type": "integer"
+      },
+      "deleted": {
+          "type": "boolean"
+      },
+      "type": {
+          "type": ["string", "null"]
+      },
+      "recordCount": {
+          "type": "integer"
+      },
+      "rowCount": {
+          "type": "integer"
+      },
+      "documentation": {
+          "type": ["string", "null"]
+      },
+      "statsExpiration": {
+          "type": ["string", "null"]
+      },
+      "id": {
+          "type": "integer"
+      },
+      "blobHandlerType": {
+          "type": ["string", "null"]
+      },
+      "policyHandlerType": {
+          "type": ["string", "null"]
+      },
+      "subscriptionType": {
+          "type": ["string", "null"]
+      },
+      "subscriptionPolicy": {
+        "type": ["null", "object"],
+        "additionalProperties": true
+      },
+      "globalPolicies": {
+          "type": ["object", "null"]
+      },
+      "status": {
+          "type": ["string", "null"]
+      },
+      "statusInfo": {
+        "type": ["null", "object"],
+        "additionalProperties": true
+      },
+      "expiration": {
+          "type": ["string", "null"]
+      },
+      "catalogMetadata": {
+          "type": ["string", "null"]
+      },
+      "workspace": {
+          "type": ["string", "null"]
+      },
+      "seeded": {
+          "type": "boolean"
+      },
+      "schemaEvolutionId": {
+          "type": "integer"
+      },
+      "columnEvolutionEnabled": {
+          "type": "boolean"
+      },
+      "createdAt": {
+          "type": ["string", "null"]
+      },
+      "updatedAt": {
+          "type": ["string", "null"]
+      },
+      "subscribedAsUser": {
+          "type": "boolean"
+      },
+      "subscriptionId": {
+          "type": "integer"
+      },
+      "acknowledgeRequired": {
+          "type": "boolean"
+      },
+      "subscriptionStatus": {
+          "type": ["string", "null"]
+      },
+      "requestedState": {
+          "type": ["string", "null"]
+      },
+      "approved": {
+          "type": "boolean"
+      },
+      "subscriptionExpiration": {
+          "type": ["string", "null"]
+      },
+      "filterId": {
+          "type": ["string", "null"]
+      },
+      "subscribers": {
+          "type": ["string", "null"]
+      },
+      "tags": {
+          "type": "array",
+          "additionalItems": true,
+          "items": {}
+      },
+      "fingerprintCreatedAt": {
+          "type": ["string", "null"]
+      },
+      "schemaEvolution": {
+        "type": ["null", "object"],
+        "additionalProperties": true
       }
-    },
-    "subscribers": {"type": "string"},
-    "recordCount": {"type": "integer"},
-    "status": {"type": "string"},
-    "subscriptionStatus": {"type": "string"},
-    "blobHandlerType": {"type": "string"},
-    "subscriptionType": {"type": "string"},
-    "connectionString": {"type": "string"},
-    "policy": {"type": ["null", "string"]},
-    "policyHandlerType": {"type": ["null", "string"]},
-    "native": {"type": ["null", "string"]}
-  }
+  },
+  "additionalProperties": true
 }

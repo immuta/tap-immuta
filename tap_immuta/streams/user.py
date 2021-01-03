@@ -11,6 +11,7 @@ class UserStream(BaseStream):
     API_METHOD = 'GET'
     TABLE = 'user'
     KEY_PROPERTIES = ['id']
+    RESPONSE_RESULT_KEY = "hits"
 
     CACHE_RESULTS = True
 

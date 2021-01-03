@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+        "addedBy": {
+            "type": "string"
+        },
+        "dataSourceName": {
+            "type": "string"
+        },
+        "policyHandlerType": {
+            "type": "string"
+        },
+        "addedOn": {
+            "type": "string"
+        },
+        "dataSourceId": {
+            "type": "integer"
+        },
+        "addedByProfile": {
+            "type": "integer"
+        },
+        "comment": {
+            "type": ["string", "null"]
+        },
+        "deleted": {
+            "type": "boolean"
+        },
+        "subscriptionType": {
+            "type": "string"
+        },
+        "subscriptionStatus": {
+            "type": "string"
+        },
+        "subscriptionPolicy": {
+            "type": ["object", "null"]
+        },
+        "connectionString": {
+            "type": "string"
+        },
+        "blobHandlerType": {
+            "type": "string"
+        },
+        "derivedInThisProject": {
+            "type": "boolean"
+        }
+    },
+    "additionalProperties": true
+}
