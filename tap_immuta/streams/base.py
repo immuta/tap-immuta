@@ -35,7 +35,7 @@ class BaseStream:
         self.substreams = []
 
     def get_url_base(self):
-        return f"{self.config['immuta-host']}"
+        return f"{self.config['immuta_host']}"
 
     def get_url(self):
         "Return the URL to hit for data from this stream."

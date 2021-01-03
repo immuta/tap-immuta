@@ -45,10 +45,10 @@ tap-immuta -c config.json --catalog catalog.json
 
 The following configuration options are available:
 
-- `api-key` (required): User-generated Immuta API Key
-- `immuta-host` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
-- `start-date` (optional): should be used on first sync to indicate how far back to grab records. Start dates should conform to the RFC3339 specification.
-- `user-agent` (optional): should be set to something that includes a contact email address should the API provider need to contact you for any reason.
+- `api_key` (required): User-generated Immuta API Key
+- `immuta_host` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
+- `start_date` (optional): should be used on first sync to indicate how far back to grab records. Start dates should conform to the RFC3339 specification.
+- `user_agent` (optional): should be set to something that includes a contact email address should the API provider need to contact you for any reason.
 
 ---
 
