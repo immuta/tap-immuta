@@ -36,7 +36,7 @@ class ImmutaClient(requests.Session):
             headers={
                 "Authorization": f"Bearer {self.auth_token}",
                 "Content-Type": "application/json",
-                "user_agent": self.config["user_agent"]
+                "user_agent": self.config.get("user_agent", "tap-immuta@immuta.com")
             },
             params=params,
             json=body)
