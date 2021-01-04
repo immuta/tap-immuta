@@ -79,6 +79,7 @@ class ProjectDataSourceStream(ProjectStream):
     TABLE = 'project_data_source'
     KEY_PROPERTIES = ['id']
     RESPONSE_RESULT_KEY = "dataSources"
+    IS_SELECTED_BY_DEFAULT=False
 
     CACHE_RESULTS = True
 
