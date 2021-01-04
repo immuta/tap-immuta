@@ -205,7 +205,7 @@ class BaseStream:
 
             LOGGER.info("Synced page %s for %s (%s records)", 
                 page, self.TABLE, len(all_resources))
-            if len(all_resources) == total_records:
+            if len(all_resources) >= total_records:
                 _next = None
             else:
                 page += 1

@@ -63,7 +63,9 @@
         "additionalProperties": true
       },
       "globalPolicies": {
-          "type": ["object", "null"]
+          "type": ["array", "null"],
+          "items": {"type": "object"},
+          "addditionalItems": true
       },
       "status": {
           "type": ["string", "null"]
@@ -100,7 +102,7 @@
           "type": "boolean"
       },
       "subscriptionId": {
-          "type": "integer"
+          "type": ["null", "integer"]
       },
       "acknowledgeRequired": {
           "type": "boolean"

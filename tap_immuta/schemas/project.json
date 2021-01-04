@@ -15,10 +15,10 @@
           "type": "string"
       },
       "description": {
-          "type": "string"
+          "type": ["string", "null"]
       },
       "documentation": {
-          "type": "string"
+          "type": ["string", "null"]
       },
       "deleted": {
           "type": "boolean"
@@ -33,7 +33,7 @@
           "type": ["object", "null"]
       },
       "equalization": {
-          "type": "object",
+          "type": ["object", "null"],
           "properties": {
               "setNone": {
                   "type": "boolean"
@@ -92,10 +92,10 @@
           "type": "boolean"
       },
       "subscriptionStatus": {
-          "type": "string"
+          "type": ["string", "null"]
       },
       "requestedState": {
-          "type": "string"
+          "type": ["string", "null"]
       },
       "approved": {
           "type": "boolean"
