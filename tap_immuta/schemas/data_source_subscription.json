@@ -97,5 +97,9 @@
           }
       }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "metadata": {
+    "inclusion": "available",
+    "selected-by-default": false
+  }
 }

@@ -60,7 +60,7 @@ class DataSourceStream(BaseStream):
 class DataSourceSubscriptionStream(DataSourceStream):
     API_METHOD = 'GET'
     TABLE = 'data_source_subscription'
-    KEY_PROPERTIES = ['id']
+    KEY_PROPERTIES = ['subscriptionId']
 
     CACHE_RESULTS = True
 
