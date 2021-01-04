@@ -11,6 +11,7 @@ class GroupStream(BaseStream):
     API_METHOD = 'GET'
     TABLE = 'group'
     KEY_PROPERTIES = ['id']
+    RESPONSE_RESULT_KEY = "hits"
 
     CACHE_RESULTS = True
 

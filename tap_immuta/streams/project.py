@@ -78,6 +78,7 @@ class ProjectDataSourceStream(ProjectStream):
     API_METHOD = 'GET'
     TABLE = 'project_data_source'
     KEY_PROPERTIES = ['id']
+    RESPONSE_RESULT_KEY = "dataSources"
 
     CACHE_RESULTS = True
 
