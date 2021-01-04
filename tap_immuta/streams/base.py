@@ -22,9 +22,11 @@ class BaseStream:
     TABLE = None
     KEY_PROPERTIES = ["id"]
     RESPONSE_RESULT_KEY = None
+
     API_METHOD = 'GET'
-    REQUIRES = []
     CACHE_RESULTS = False
+    IS_SELECTED_BY_DEFAULT = True
+    REQUIRES = []
     path = ""
 
     def __init__(self, config, state, catalog, client):
@@ -82,13 +84,13 @@ class BaseStream:
     def matches_catalog(cls, stream_catalog):
         return stream_catalog.stream == cls.TABLE
 
-    def generate_catalog(self, selected_by_default=True):
+    def generate_catalog(self):
         schema = self.get_schema()
         mdata = singer.metadata.new()
 
         mdata = singer.metadata.write(mdata, (), "inclusion", "available")
         mdata = singer.metadata.write(
-            mdata, (), "selected-by-default", selected_by_default
+            mdata, (), "selected-by-default", self.IS_SELECTED_BY_DEFAULT
         )
 
         for field_name in schema.get("properties").keys():
@@ -104,7 +106,7 @@ class BaseStream:
                 mdata,
                 ("properties", field_name),
                 "selected-by-default",
-                selected_by_default,
+                self.IS_SELECTED_BY_DEFAULT,
             )
 
         return [

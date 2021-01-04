@@ -13,6 +13,8 @@ class AuditStream(BaseStream):
     KEY_PROPERTIES = ['id']
     RESPONSE_RESULT_KEY = "hits"
 
+    IS_SELECTED_BY_DEFAULT = False
+
     CACHE_RESULTS = False
 
     RECORD_TYPES = [
