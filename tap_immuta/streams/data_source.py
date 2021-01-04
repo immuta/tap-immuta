@@ -61,6 +61,7 @@ class DataSourceSubscriptionStream(DataSourceStream):
     API_METHOD = 'GET'
     TABLE = 'data_source_subscription'
     KEY_PROPERTIES = ['subscriptionId']
+    IS_SELECTED_BY_DEFAULT = False
 
     CACHE_RESULTS = True
 

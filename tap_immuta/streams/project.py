@@ -60,6 +60,7 @@ class ProjectMemberStream(ProjectStream):
     TABLE = 'project_member'
     KEY_PROPERTIES = ['id']
     RESPONSE_RESULT_KEY = "members"
+    IS_SELECTED_BY_DEFAULT = False
 
     CACHE_RESULTS = True
 

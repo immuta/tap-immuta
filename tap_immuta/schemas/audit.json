@@ -16,9 +16,5 @@
     "id": {"type": "string"},
     "fingerprintVersionName": {"type": ["null", "string"]},   
     "email": {"type": ["null", "string"]}
-  },
-  "metadata": {
-    "inclusion": "available",
-    "selected-by-default": false
   }
 }
