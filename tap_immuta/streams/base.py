@@ -184,7 +184,7 @@ class BaseStream:
                 LOGGER.debug(f"Retrieving records from response field: {self.RESPONSE_RESULT_KEY}")
                 records = result[self.RESPONSE_RESULT_KEY]
                 data = self.get_stream_data(records)
-                total_records = int(result.get("count"))
+                total_records = len(data)
 
             # API directly returns record list
             elif isinstance(result, list):

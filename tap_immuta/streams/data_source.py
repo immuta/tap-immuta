@@ -61,6 +61,7 @@ class DataSourceSubscriptionStream(DataSourceStream):
     API_METHOD = 'GET'
     TABLE = 'data_source_subscription'
     KEY_PROPERTIES = ['data_source_id', 'profile']
+    RESPONSE_RESULT_KEY="users"
     IS_SELECTED_BY_DEFAULT = True
 
     CACHE_RESULTS = True

@@ -75,9 +75,6 @@
                     }
                 ]
             }
-        },
-        "currentUserCanApprove": {
-            "type": "boolean"
         }
     },    
     "additionalProperties": true
