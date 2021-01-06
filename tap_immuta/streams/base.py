@@ -198,6 +198,9 @@ class BaseStream:
                 data = self.get_stream_data([result])
                 total_records = len(data)
 
+            # Add additional_attributes
+            data = [{**r, **additional_attributes} for r in data]
+
             with singer.metrics.record_counter(endpoint=table) as counter:
                 singer.write_records(table, data)
                 counter.increment(len(data))
@@ -210,9 +213,6 @@ class BaseStream:
             else:
                 page += 1
                 params = self.get_params(page)
-
-        # Add additional_attributes
-        all_resources = [{**r, **additional_attributes} for r in all_resources]
         
         return all_resources
 
