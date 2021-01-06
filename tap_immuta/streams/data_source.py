@@ -98,7 +98,7 @@ class DataSourceSubscriptionStream(DataSourceStream):
 class DataSourceDictionaryStream(DataSourceStream):
     API_METHOD = 'GET'
     TABLE = 'data_source_dictionary'
-    KEY_PROPERTIES = ['id']
+    KEY_PROPERTIES = ['dataSource']
 
     CACHE_RESULTS = True
 
