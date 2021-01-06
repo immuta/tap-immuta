@@ -58,7 +58,7 @@ class ProjectStream(BaseStream):
 class ProjectMemberStream(ProjectStream):
     API_METHOD = 'GET'
     TABLE = 'project_member'
-    KEY_PROPERTIES = ['project_id', 'subscriptionId']
+    KEY_PROPERTIES = ['project_id', 'profile']
     RESPONSE_RESULT_KEY = "members"
     IS_SELECTED_BY_DEFAULT = True
 
