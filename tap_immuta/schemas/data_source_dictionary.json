@@ -9,67 +9,42 @@
           "type": "array",
           "additionalItems": true,
           "items": {
-              "anyOf": [
-                  {
-                      "type": "object",
-                      "properties": {
-                          "name": {
-                              "type": "string"
-                          },
-                          "dataType": {
-                              "type": "string"
-                          },
-                          "nullable": {
-                              "type": "boolean"
-                          },
-                          "remoteType": {
-                              "type": "string"
-                          }
-                      },
-                      "additionalProperties": true
-                  },
-                  {
-                      "type": "object",
-                      "properties": {
-                          "name": {
-                              "type": "string"
-                          },
-                          "dataType": {
-                              "type": "string"
-                          },
-                          "nullable": {
-                              "type": "boolean"
-                          },
-                          "remoteType": {
-                              "type": "string"
-                          },
-                          "tags": {
-                              "type": "array",
-                              "additionalItems": true,
-                              "items": {
-                                  "anyOf": [
-                                      {
-                                          "type": "object",
-                                          "properties": {
-                                              "name": {
-                                                  "type": "string"
-                                              },
-                                              "source": {
-                                                  "type": "string"
-                                              },
-                                              "deleted": {
-                                                  "type": "boolean"
-                                              }
-                                          },
-                                          "additionalProperties": true
-                                      }
-                                  ]
-                              }
-                          }
-                      },
-                      "additionalProperties": true
-                  }
-              ]
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "dataType": {
+                        "type": "string"
+                    },
+                    "nullable": {
+                        "type": "boolean"
+                    },
+                    "remoteType": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "additionalItems": true,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "string"
+                                },
+                                "deleted": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                        }
+                    }
+                },
+                "additionalProperties": true
           }
       },
       "types": {
@@ -91,7 +66,6 @@
       },
       "updatedAt": {
           "type": "string"
-      }
-  },
-  "additionalProperties": true
+      },
+    "additionalProperties": true
 }

@@ -169,7 +169,7 @@ class BaseStream:
         save_state(self.state)
         return self.state
 
-    def sync_paginated(self, url):
+    def sync_paginated(self, url, additional_attributes={}):
         table = self.TABLE
         _next = True
         page = 0
@@ -209,7 +209,11 @@ class BaseStream:
                 _next = None
             else:
                 page += 1
-                params = self.get_params(page) 
+                params = self.get_params(page)
+
+        # Add additional_attributes
+        all_resources = [{**r, **additional_attributes} for r in all_resources]
+        
         return all_resources
 
 
