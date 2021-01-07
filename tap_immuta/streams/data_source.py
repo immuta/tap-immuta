@@ -24,7 +24,7 @@ class DataSourceStream(BaseStream):
         url = f"{self.get_url_base()}/dataSource"
         data_source_ids = []
         while len(data_source_ids) < counter:
-            params = {"offset": page, "size": 200}
+            params = {"offset": page, "size": 2000}
             response = self.client.make_request(url, "GET", params=params)
             data_source_ids.extend([ii.get("id") for ii in response["hits"]])
             page += 1
