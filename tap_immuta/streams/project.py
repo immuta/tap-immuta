@@ -65,7 +65,7 @@ class ProjectMemberStream(ProjectStream):
     CACHE_RESULTS = True
 
     def get_params(self, page=0):
-        return {"size": 500, "offset": page}
+        return {"size": 1000, "offset": page}
 
     def get_url(self, project_id):
         "Return the URL to hit for data from this stream."
@@ -102,6 +102,9 @@ class ProjectDataSourceStream(ProjectStream):
     IS_SELECTED_BY_DEFAULT=True
 
     CACHE_RESULTS = True
+
+    def get_params(self, page=0):
+        return {"size": 1000, "offset": page}
 
     def get_url(self, project_id):
         "Return the URL to hit for data from this stream."
