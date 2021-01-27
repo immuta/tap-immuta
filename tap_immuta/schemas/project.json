@@ -86,7 +86,7 @@
           "type": "boolean"
       },
       "subscriptionId": {
-          "type": "integer"
+          "type": ["null", "integer"]
       },
       "acknowledgeRequired": {
           "type": "boolean"
