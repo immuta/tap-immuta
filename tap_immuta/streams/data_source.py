@@ -22,15 +22,21 @@ class DataSourceStream(BaseStream):
         page = 0
         counter = 9999
         url = f"{self.get_url_base()}/dataSource"
-        data_source_ids = []
-        while len(data_source_ids) < counter:
+        data_source_data = []
+        while len(data_source_data) < counter:
             params = {"offset": page, "size": 2000}
             response = self.client.make_request(url, "GET", params=params)
-            data_source_ids.extend([ii.get("id") for ii in response["hits"]])
+            data_source_data.extend([
+                {
+                    "id": ii.get("id"),
+                    "connectionString": ii.get("connectionString")
+                }
+                for ii in response["hits"]
+            ])
             page += 1
             counter = response["count"]
         LOGGER.info("Found %s Data Sources.", counter)
-        return data_source_ids
+        return data_source_data
 
     def get_url(self, data_source_id):
         "Return the URL to hit for data from this stream."
@@ -43,10 +49,11 @@ class DataSourceStream(BaseStream):
 
         data_source_list = self.get_all_data_source_ids()
         resources = list()
-        for child_id in data_source_list:
-            url = self.get_url(child_id)
-            LOGGER.info("Syncing data for %s %s at %s", table, child_id, url)
-            resources.extend(self.sync_paginated(url))
+        for ds_data in data_source_list:
+            additional_attributes = {"connectionString": ds_data["connectionString"]}
+            url = self.get_url(ds_data["id"])
+            LOGGER.info("Syncing data for %s %s at %s", table, ds_data["id"], url)
+            resources.extend(self.sync_paginated(url, additional_attributes))
 
         if self.CACHE_RESULTS:
             stream_cache.add(table, resources)
@@ -80,7 +87,8 @@ class DataSourceSubscriptionStream(DataSourceStream):
 
         data_source_list = self.get_all_data_source_ids()
         resources = list()
-        for child_id in data_source_list:
+        for ds_data in data_source_list:
+            child_id = ds_data["id"]
             additional_attributes = {"data_source_id": child_id}
             url = self.get_url(child_id)
             LOGGER.info("Syncing data for %s %s at %s", table, child_id, url)

@@ -87,7 +87,10 @@
           "type": "boolean"
       },
       "schemaEvolutionId": {
-          "type": "integer"
+          "type": ["null", "integer"]
+      },
+      "connectionString": {
+        "type": "string"
       },
       "columnEvolutionEnabled": {
           "type": "boolean"
