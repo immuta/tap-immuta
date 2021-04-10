@@ -4,27 +4,8 @@ import requests
 
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
-
 from singer_sdk.streams import RESTStream
 
-from singer_sdk.authenticators import (
-    APIAuthenticatorBase,
-    SimpleAuthenticator,
-    OAuthAuthenticator,
-    OAuthJWTAuthenticator
-)
-
-from singer_sdk.typing import (
-    ArrayType,
-    BooleanType,
-    DateTimeType,
-    IntegerType,
-    NumberType,
-    ObjectType,
-    PropertiesList,
-    Property,
-    StringType,
-)
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
@@ -33,6 +14,10 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 class ImmutaStream(RESTStream):
     """Immuta stream class."""
     response_result_key = None
+
+    @property
+    def http_headers(self) -> dict:
+        return {"Authorization": self.config.get("api_key")}
 
     @property
     def url_base(self) -> str:
@@ -52,13 +37,6 @@ class ImmutaStream(RESTStream):
         params = {}
         return params
 
-    @property
-    def http_headers(self) -> dict:
-        headers = {
-            "Authorization": self.config.get("api_key"),
-        }
-        return headers
-
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
             """Parse the response and return an iterator of result rows."""
             resp_json = response.json()
@@ -71,23 +49,44 @@ class ImmutaStream(RESTStream):
                     yield row
 
 
-class UserStream(ImmutaStream):
-    name = "user"
-    path = "/bim/user"
+class GlobalPolicyStream(ImmutaStream):
+    name = "global_policy"
+    path = "/policy/global"
     primary_keys = ["id"]
-    replication_key = None
-    response_result_key = "hits"
 
-    schema_filepath = SCHEMAS_DIR / "user.json"
+    schema_filepath = SCHEMAS_DIR / "group.json"
 
 
 class GroupStream(ImmutaStream):
     name = "group"
     path = "/bim/group"
     primary_keys = ["id"]
-    replication_key = None
     response_result_key = "hits"
 
     schema_filepath = SCHEMAS_DIR / "group.json"
 
 
+class PurposeStream(ImmutaStream):
+    name = "purpose"
+    path = "/governance/purpose"
+    primary_keys = ["id"]
+    response_result_key = "purposes"
+
+    schema_filepath = SCHEMAS_DIR / "purpose.json"
+
+
+class TagStream(ImmutaStream):
+    name = "tag"
+    path = "/tag"
+    primary_keys = ["id"]
+
+    schema_filepath = SCHEMAS_DIR / "tag.json"
+
+
+class UserStream(ImmutaStream):
+    name = "user"
+    path = "/bim/user"
+    primary_keys = ["id"]
+    response_result_key = "hits"
+
+    schema_filepath = SCHEMAS_DIR / "user.json"

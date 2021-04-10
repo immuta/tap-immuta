@@ -19,14 +19,20 @@ from singer_sdk.typing import (
 from tap_immuta.streams import (
     ImmutaStream,
 
-    UserStream,
+    GlobalPolicyStream,
     GroupStream,
+    PurposeStream,
+    TagStream,
+    UserStream,
 )
 
 
 STREAM_TYPES = [
-    UserStream,
+    GlobalPolicyStream,
     GroupStream,
+    PurposeStream,
+    TagStream,
+    UserStream,
 ]
 
 
