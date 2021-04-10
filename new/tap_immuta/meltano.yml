@@ -1,0 +1,14 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: tap-immuta
+plugins:
+  extractors:
+  - name: tap-immuta
+    namespace: tap_immuta
+    # TODO: To test using Meltano, replace with absolute path
+    #       to the tap-immuta.sh script:
+    executable: ./tap-immuta.sh
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
