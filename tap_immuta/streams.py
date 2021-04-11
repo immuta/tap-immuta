@@ -57,6 +57,9 @@ class ChildStream(ImmutaStream):
         if "{iam_id}" in self.path:
             iam_list = ["bim"]
             return [{"iam_id": id} for id in iam_list]
+        if "{project_id}" in self.path:
+            project_list = self._get_all_project_ids()
+            return [{"project_id": id} for id in project_list]
         raise ValueError(
             "Could not detect partition type for Gitlab stream "
             f"'{self.name}' ({self.path}). "
@@ -81,6 +84,21 @@ class ChildStream(ImmutaStream):
             page += 1
             counter = response["count"]
         return data_source_data
+
+    def _get_all_project_ids(self):
+        page = 0
+        counter = 99999
+        url = f"{self.url_base}/project"
+        project_list = []
+        while len(project_list) < counter:
+            params = {"offset": page, "size": 200}
+            response = self._requests_session.get(
+                url, headers=self.http_headers, params=params
+            ).json()
+            project_list.extend([ii.get("id") for ii in response["hits"]])
+            page += 1
+            counter = response["count"]
+        return project_list
 
 
 class DataSourceStream(ChildStream):
@@ -123,6 +141,32 @@ class GroupStream(ChildStream):
     response_result_key = "hits"
 
     schema_filepath = SCHEMAS_DIR / "group.json"
+
+
+class ProjectStream(ChildStream):
+    name = "project"
+    path = "/project/{project_id}"
+    primary_keys = ["id"]
+
+    schema_filepath = SCHEMAS_DIR / "project.json"
+
+
+class ProjectDataSourceStream(ChildStream):
+    name = "project_data_source"
+    path = "/project/{project_id}/dataSources"
+    primary_keys = ["project_id", "dataSourceId"]
+    response_result_key = "dataSources"
+
+    schema_filepath = SCHEMAS_DIR / "project_data_source.json"
+
+
+class ProjectMemberStream(ChildStream):
+    name = "project_member"
+    path = "/project/{project_id}/members"
+    primary_keys = ["project_id", "profile"]
+    response_result_key = "members"
+
+    schema_filepath = SCHEMAS_DIR / "project_member.json"
 
 
 class PurposeStream(ImmutaStream):
