@@ -3,7 +3,6 @@
 import datetime
 
 from singer_sdk.testing import get_standard_tap_tests
-
 from tap_immuta.tap import TapImmuta
 
 SAMPLE_CONFIG = {
