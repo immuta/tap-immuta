@@ -54,9 +54,6 @@ class ChildStream(ImmutaStream):
         if "{data_source_id}" in self.path:
             data_source_list = self._get_all_data_source_ids()
             return [{"data_source_id": ds["id"]} for ds in data_source_list]
-        if "{iam_id}" in self.path:
-            iam_list = ["bim"]
-            return [{"iam_id": id} for id in iam_list]
         if "{project_id}" in self.path:
             project_list = self._get_all_project_ids()
             return [{"project_id": id} for id in project_list]
@@ -134,13 +131,21 @@ class GlobalPolicyStream(ImmutaStream):
     schema_filepath = SCHEMAS_DIR / "global_policy.json"
 
 
-class GroupStream(ChildStream):
+class GroupStream(ImmutaStream):
     name = "group"
-    path = "/{iam_id}/group"
+    path = "/bim/group"
     primary_keys = ["id"]
     response_result_key = "hits"
 
     schema_filepath = SCHEMAS_DIR / "group.json"
+
+
+class IamStream(ImmutaStream):
+    name = "iam"
+    path = "/bim/iam"
+    primary_keys = ["id"]
+
+    schema_filepath = SCHEMAS_DIR / "iam.json"
 
 
 class ProjectStream(ChildStream):
@@ -186,9 +191,9 @@ class TagStream(ImmutaStream):
     schema_filepath = SCHEMAS_DIR / "tag.json"
 
 
-class UserStream(ChildStream):
+class UserStream(ImmutaStream):
     name = "user"
-    path = "/{iam_id}/user"
+    path = "/bim/user"
     primary_keys = ["id"]
     response_result_key = "hits"
 
