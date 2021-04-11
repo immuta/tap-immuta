@@ -5,7 +5,27 @@
       "dataSource": {
           "type": "integer"
       },
-      "metadata": {
+      "types": {
+        "type": "array",
+        "additionalItems": true,
+        "items": {
+            "anyOf": [
+                {
+                    "type": "string"
+                }
+            ]
+        }
+        },
+        "id": {
+            "type": "integer"
+        },
+        "createdAt": {
+            "type": "string"
+        },
+        "updatedAt": {
+            "type": "string"
+        },
+        "metadata": {
           "type": "array",
           "additionalItems": true,
           "items": {
@@ -41,31 +61,11 @@
                             },
                             "additionalProperties": true
                         }
-                        }
                     }
-                },
-                "additionalProperties": true
-          }
-      },
-      "types": {
-          "type": "array",
-          "additionalItems": true,
-          "items": {
-              "anyOf": [
-                  {
-                      "type": "string"
-                  }
-              ]
-          }
-      },
-      "id": {
-          "type": "integer"
-      },
-      "createdAt": {
-          "type": "string"
-      },
-      "updatedAt": {
-          "type": "string"
-      },
+                }
+            },
+            "additionalProperties": true
+        }
+    },
     "additionalProperties": true
 }

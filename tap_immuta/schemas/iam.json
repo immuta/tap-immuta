@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+      "id": {"type": "string"},
+      "displayname": {"type": "string"},
+      "type": {"type": "string"},
+      "oauth": {"type": "boolean"}
+    }
+  }

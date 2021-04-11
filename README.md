@@ -1,44 +1,19 @@
 # tap-immuta
 
-**Author**: Stephen Bailey (sbailey@immuta.com)
+`tap-immuta` is a Singer tap for Immuta.
 
-This is a [Singer](http://singer.io) tap that produces JSON-formatted data following the [Singer spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md). It can generate a catalog of available data in Immuta and extract the following resources:
+This package is being made available by Immuta's internal analytics
+team and is NOT officially supported by Immuta. Users are welcome to open issues
+or pull requests to improve the tap.
 
-- Audit Records
-- Data Source
-- Global Policies
-- Groups
-- Projects
-- Purposes
-- Tags
-- Users
+Built with the [Singer SDK](https://gitlab.com/meltano/singer-sdk).
 
-## Quick Start
+## Installation
 
-1. Install
+This tap is avaiable on PyPi and can be installed using:
 
 ```bash
-git clone git@github.com:immuta/tap-immuta.git
-cd tap-immuta
-pip install .
-```
-
-1. Get an [API key](https://immuta.me/developers-api) from immuta
-
-1. Create the config file. There is a template you can use at `config.json.example`, just copy it to `config.json` in the repo root and insert your token
-
-1. Run the application to generate a catalog.
-
-```bash
-tap-immuta -c config.json --discover > catalog.json
-```
-
-1. Select the tables you'd like to replicate. Step 4 generates a a file called `catalog.json` that specifies all the available endpoints and fields. You'll need to open the file and select the ones you'd like to replicate. See the [Singer guide on Catalog Format](https://github.com/singer-io/getting-started/blob/c3de2a10e10164689ddd6f24fee7289184682c1f/BEST_PRACTICES.md#catalog-format) for more information on how tables are selected.
-
-1. Run it!
-
-```bash
-tap-immuta -c config.json --catalog catalog.json
+pip install tap-immuta
 ```
 
 ## Configuration
@@ -50,6 +25,37 @@ The following configuration options are available:
 - `start_date` (optional): should be used on first sync to indicate how far back to grab records. Start dates should conform to the RFC3339 specification.
 - `user_agent` (optional): should be set to something that includes a contact email address should the API provider need to contact you for any reason.
 
----
+A full list of supported settings and capabilities for this
+tap is available by running:
 
-Copyright &copy; 2020 Immuta
+```bash
+tap-immuta --about
+```
+
+## Usage
+
+You can easily run `tap-immuta` by itself or in a pipeline using [Meltano](www.meltano.com).
+
+### Executing the Tap Directly
+
+```bash
+tap-immuta --version
+tap-immuta --help
+tap-immuta --config CONFIG --discover > ./catalog.json
+tap-immuta --config CONFIG --catalog ./catalog.json
+```
+
+
+### Create and Run Tests
+
+Create tests within the `tap_immuta/tests` subfolder and
+  then run:
+
+```bash
+pip install pytest
+pytest tap_immuta/tests
+```
+
+### Singer SDK Dev Guide
+
+See the [dev guide](../../docs/dev_guide.md) for more instructions on how to use the Singer SDK to develop your own taps and targets.
