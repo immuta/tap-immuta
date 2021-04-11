@@ -6,7 +6,7 @@ setuptools.setup(
     version="0.1.0",
     description="Singer.io tap for extracting data from Immuta Accounts API",
     author="Stephen Bailey",
-    url="http://singer.io/",
+    url="http://github.com/immuta/tap-immuta",
     classifiers=["Programming Language :: Python :: 3 :: Only"],
     py_modules=["tap_immuta"],
     entry_points="""
@@ -14,9 +14,7 @@ setuptools.setup(
         tap-immuta=tap_immuta:main
     """,
     packages=setuptools.find_packages(),
-    package_data = {
-        "schemas": ["tap_immuta/schemas/*.json"]
-    },
-    install_requires=["singer-python", "requests"],
+    package_data={"schemas": ["tap_immuta/schemas/*.json"]},
+    install_requires=["singer-sdk"],
     include_package_data=True,
 )
