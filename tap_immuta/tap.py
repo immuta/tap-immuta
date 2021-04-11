@@ -18,7 +18,6 @@ from singer_sdk.typing import (
 
 from tap_immuta.streams import (
     ImmutaStream,
-
     GlobalPolicyStream,
     GroupStream,
     PurposeStream,
@@ -46,7 +45,6 @@ class TapImmuta(Tap):
         Property("api_key", StringType, required=True),
         Property("start_date", DateTimeType),
     ).to_dict()
-
 
     def discover_streams(self) -> List[Stream]:
         """Return a list of discovered streams."""

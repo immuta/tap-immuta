@@ -9,9 +9,9 @@ LOGGER = singer.get_logger()  # noqa
 
 
 class ProjectStream(BaseStream):
-    API_METHOD = 'GET'
-    TABLE = 'project'
-    KEY_PROPERTIES = ['id']
+    API_METHOD = "GET"
+    TABLE = "project"
+    KEY_PROPERTIES = ["id"]
 
     def get_params(self, page):
         return {}
@@ -56,9 +56,9 @@ class ProjectStream(BaseStream):
 
 
 class ProjectMemberStream(ProjectStream):
-    API_METHOD = 'GET'
-    TABLE = 'project_member'
-    KEY_PROPERTIES = ['project_id', 'profile']
+    API_METHOD = "GET"
+    TABLE = "project_member"
+    KEY_PROPERTIES = ["project_id", "profile"]
     RESPONSE_RESULT_KEY = "members"
     IS_SELECTED_BY_DEFAULT = True
 
@@ -93,13 +93,12 @@ class ProjectMemberStream(ProjectStream):
         return self.state
 
 
-
 class ProjectDataSourceStream(ProjectStream):
-    API_METHOD = 'GET'
-    TABLE = 'project_data_source'
-    KEY_PROPERTIES = ['project_id', 'dataSourceId']
+    API_METHOD = "GET"
+    TABLE = "project_data_source"
+    KEY_PROPERTIES = ["project_id", "dataSourceId"]
     RESPONSE_RESULT_KEY = "dataSources"
-    IS_SELECTED_BY_DEFAULT=True
+    IS_SELECTED_BY_DEFAULT = True
 
     CACHE_RESULTS = True
 
@@ -130,4 +129,3 @@ class ProjectDataSourceStream(ProjectStream):
         LOGGER.info("Reached end of stream, moving on.")
         save_state(self.state)
         return self.state
-

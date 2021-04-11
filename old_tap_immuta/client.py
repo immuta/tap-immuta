@@ -18,13 +18,11 @@ class ImmutaClient(requests.Session):
     def get_authorization(self):
         LOGGER.info("Retrieving authentication token.")
         auth_url = f"{self.config['immuta_host']}/bim/apikey/authenticate"
-        response = requests.post(
-            auth_url,
-            data={"apikey": self.config["api_key"]})
-        
+        response = requests.post(auth_url, data={"apikey": self.config["api_key"]})
+
         if response.status_code != 200:
             raise RuntimeError(response.text)
-        
+
         return response.json().get("token")
 
     def make_request(self, url, method, params=None, body=None):
@@ -36,10 +34,11 @@ class ImmutaClient(requests.Session):
             headers={
                 "Authorization": f"Bearer {self.auth_token}",
                 "Content-Type": "application/json",
-                "user_agent": self.config.get("user_agent", "tap-immuta@immuta.com")
+                "user_agent": self.config.get("user_agent", "tap-immuta@immuta.com"),
             },
             params=params,
-            json=body)
+            json=body,
+        )
 
         if response.status_code != 200:
             raise RuntimeError(response.text)

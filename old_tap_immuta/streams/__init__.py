@@ -19,7 +19,7 @@ AVAILABLE_STREAMS = [
     ProjectMemberStream,
     PurposeStream,
     TagStream,
-    UserStream
+    UserStream,
 ]
 
 __all__ = [
@@ -33,5 +33,5 @@ __all__ = [
     "ProjectMemberStream",
     "PurposeStream",
     "TagStream",
-    "UserStream"
+    "UserStream",
 ]

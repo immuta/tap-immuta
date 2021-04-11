@@ -7,7 +7,6 @@ LOGGER = singer.get_logger()  # noqa
 
 
 class Runner:
-
     def __init__(self, args, client, available_streams):
         self.config = args.config
         self.state = args.state
@@ -23,8 +22,11 @@ class Runner:
 
         for stream_catalog in self.catalog.streams:
             if not is_selected(stream_catalog):
-                LOGGER.info("'{}' is not marked selected, skipping."
-                            .format(stream_catalog.stream))
+                LOGGER.info(
+                    "'{}' is not marked selected, skipping.".format(
+                        stream_catalog.stream
+                    )
+                )
                 continue
 
             for available_stream in self.available_streams:
@@ -32,12 +34,15 @@ class Runner:
                     if not available_stream.requirements_met(self.catalog):
                         raise RuntimeError(
                             "{} requires that that the following are "
-                            "selected: {}"
-                            .format(stream_catalog.stream,
-                                    ','.join(available_stream.REQUIRES)))
+                            "selected: {}".format(
+                                stream_catalog.stream,
+                                ",".join(available_stream.REQUIRES),
+                            )
+                        )
 
                     to_add = available_stream(
-                        self.config, self.state, stream_catalog, self.client)
+                        self.config, self.state, stream_catalog, self.client
+                    )
 
                     streams.append(to_add)
 
@@ -53,7 +58,7 @@ class Runner:
 
             catalog += stream.generate_catalog()
 
-        json.dump({'streams': catalog}, sys.stdout, indent=4)
+        json.dump({"streams": catalog}, sys.stdout, indent=4)
 
     def do_sync(self):
         LOGGER.info("Starting sync.")
@@ -71,8 +76,9 @@ class Runner:
 
             except Exception as e:
                 LOGGER.error(str(e))
-                LOGGER.error('Failed to sync endpoint {}, moving on!'
-                             .format(stream.TABLE))
+                LOGGER.error(
+                    "Failed to sync endpoint {}, moving on!".format(stream.TABLE)
+                )
                 raise e
 
         save_state(self.state)
@@ -82,20 +88,20 @@ def is_selected(stream_catalog):
     metadata = singer.metadata.to_map(stream_catalog.metadata)
     stream_metadata = metadata.get((), {})
 
-    inclusion = stream_metadata.get('inclusion')
+    inclusion = stream_metadata.get("inclusion")
 
-    if stream_metadata.get('selected') is not None:
-        selected = stream_metadata.get('selected')
+    if stream_metadata.get("selected") is not None:
+        selected = stream_metadata.get("selected")
     else:
-        selected = stream_metadata.get('selected-by-default')
+        selected = stream_metadata.get("selected-by-default")
 
-    if inclusion == 'unsupported':
+    if inclusion == "unsupported":
         return False
 
     elif selected is not None:
         return selected
 
-    return inclusion == 'automatic'
+    return inclusion == "automatic"
 
 
 def save_state(state):

@@ -10,9 +10,9 @@ from singer_sdk.streams import RESTStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 
-
 class ImmutaStream(RESTStream):
     """Immuta stream class."""
+
     response_result_key = None
 
     @property
@@ -25,9 +25,7 @@ class ImmutaStream(RESTStream):
         return self.config["immuta_host"]
 
     def get_url_params(
-        self,
-        partition: Optional[dict],
-        next_page_token: Optional[Any] = None
+        self, partition: Optional[dict], next_page_token: Optional[Any] = None
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization.
 
@@ -38,15 +36,15 @@ class ImmutaStream(RESTStream):
         return params
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
-            """Parse the response and return an iterator of result rows."""
-            resp_json = response.json()
-            if self.response_result_key:
-                resp_json = resp_json.get(self.response_result_key, {})
-            if isinstance(resp_json, dict):
-                yield resp_json
-            else:
-                for row in resp_json:
-                    yield row
+        """Parse the response and return an iterator of result rows."""
+        resp_json = response.json()
+        if self.response_result_key:
+            resp_json = resp_json.get(self.response_result_key, {})
+        if isinstance(resp_json, dict):
+            yield resp_json
+        else:
+            for row in resp_json:
+                yield row
 
 
 class GlobalPolicyStream(ImmutaStream):

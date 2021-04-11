@@ -10,8 +10,7 @@ from datetime import timedelta, datetime
 
 from tap_immuta.config import get_config_start_date
 from tap_immuta.streams import cache as stream_cache
-from tap_immuta.state import incorporate, save_state, \
-    get_last_record_value_for_table
+from tap_immuta.state import incorporate, save_state, get_last_record_value_for_table
 
 
 LOGGER = singer.get_logger()
@@ -23,7 +22,7 @@ class BaseStream:
     KEY_PROPERTIES = ["id"]
     RESPONSE_RESULT_KEY = None
 
-    API_METHOD = 'GET'
+    API_METHOD = "GET"
     CACHE_RESULTS = False
     IS_SELECTED_BY_DEFAULT = True
     REQUIRES = []
@@ -53,9 +52,9 @@ class BaseStream:
     def load_schema_by_name(self, name):
         return singer.utils.load_json(
             os.path.normpath(
-                os.path.join(
-                    self.get_class_path(),
-                    '../schemas/{}.json'.format(name))))
+                os.path.join(self.get_class_path(), "../schemas/{}.json".format(name))
+            )
+        )
 
     def get_schema(self):
         return self.load_schema_by_name(self.TABLE)
@@ -67,16 +66,11 @@ class BaseStream:
         if not isinstance(result, list):
             raise TypeError(f"Result must be list. Got: {result}")
 
-        return [
-            self.transform_record(record)
-            for record in result
-        ]
-        
+        return [self.transform_record(record) for record in result]
+
     @classmethod
     def requirements_met(cls, catalog):
-        selected_streams = [
-            s.stream for s in catalog.streams if is_selected(s)
-        ]
+        selected_streams = [s.stream for s in catalog.streams if is_selected(s)]
 
         return set(cls.REQUIRES).issubset(selected_streams)
 
@@ -119,21 +113,17 @@ class BaseStream:
             }
         ]
 
-
     def transform_record(self, record):
         with singer.Transformer() as tx:
             metadata = {}
 
             if not isinstance(record, dict):
-                raise TypeError(f'Record must be dict. got: {record}')
+                raise TypeError(f"Record must be dict. got: {record}")
 
             if self.catalog.metadata is not None:
                 metadata = singer.metadata.to_map(self.catalog.metadata)
 
-            return tx.transform(
-                    record,
-                    self.catalog.schema.to_dict(),
-                    metadata)
+            return tx.transform(record, self.catalog.schema.to_dict(), metadata)
 
     def get_catalog_keys(self):
         return list(self.catalog.schema.properties.keys())
@@ -142,12 +132,15 @@ class BaseStream:
         singer.write_schema(
             self.catalog.stream,
             self.catalog.schema.to_dict(),
-            key_properties=self.catalog.key_properties)
+            key_properties=self.catalog.key_properties,
+        )
 
     def sync(self):
-        LOGGER.info('Syncing stream {} with {}'
-                    .format(self.catalog.tap_stream_id,
-                            self.__class__.__name__))
+        LOGGER.info(
+            "Syncing stream {} with {}".format(
+                self.catalog.tap_stream_id, self.__class__.__name__
+            )
+        )
 
         self.write_schema()
 
@@ -173,7 +166,7 @@ class BaseStream:
         table = self.TABLE
         _next = True
         page = 0
-        params = self.get_params(page) 
+        params = self.get_params(page)
 
         all_resources = []
         while _next is not None:
@@ -181,7 +174,9 @@ class BaseStream:
 
             # Streams where the result contains a record list under a key
             if isinstance(result, dict) and self.RESPONSE_RESULT_KEY is not None:
-                LOGGER.debug(f"Retrieving records from response field: {self.RESPONSE_RESULT_KEY}")
+                LOGGER.debug(
+                    f"Retrieving records from response field: {self.RESPONSE_RESULT_KEY}"
+                )
                 records = result[self.RESPONSE_RESULT_KEY]
                 data = self.get_stream_data(records)
                 total_records = len(data)
@@ -206,14 +201,18 @@ class BaseStream:
                 counter.increment(len(data))
                 all_resources.extend(data)
 
-            LOGGER.info("Synced page %s for %s (%s records)", 
-                page, self.TABLE, len(all_resources))
+            LOGGER.info(
+                "Synced page %s for %s (%s records)",
+                page,
+                self.TABLE,
+                len(all_resources),
+            )
             if len(all_resources) >= total_records:
                 _next = None
             else:
                 page += 1
                 params = self.get_params(page)
-        
+
         return all_resources
 
 
@@ -221,18 +220,17 @@ def is_selected(stream_catalog):
     metadata = singer.metadata.to_map(stream_catalog.metadata)
     stream_metadata = metadata.get((), {})
 
-    inclusion = stream_metadata.get('inclusion')
+    inclusion = stream_metadata.get("inclusion")
 
-    if stream_metadata.get('selected') is not None:
-        selected = stream_metadata.get('selected')
+    if stream_metadata.get("selected") is not None:
+        selected = stream_metadata.get("selected")
     else:
-        selected = stream_metadata.get('selected-by-default')
+        selected = stream_metadata.get("selected-by-default")
 
-    if inclusion == 'unsupported':
+    if inclusion == "unsupported":
         return False
 
     elif selected is not None:
         return selected
 
-    return inclusion == 'automatic'
-
+    return inclusion == "automatic"

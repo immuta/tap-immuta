@@ -9,9 +9,9 @@ LOGGER = singer.get_logger()  # noqa
 
 
 class DataSourceStream(BaseStream):
-    API_METHOD = 'GET'
-    TABLE = 'data_source'
-    KEY_PROPERTIES = ['id']
+    API_METHOD = "GET"
+    TABLE = "data_source"
+    KEY_PROPERTIES = ["id"]
 
     CACHE_RESULTS = True
 
@@ -26,13 +26,12 @@ class DataSourceStream(BaseStream):
         while len(data_source_data) < counter:
             params = {"offset": page, "size": 2000}
             response = self.client.make_request(url, "GET", params=params)
-            data_source_data.extend([
-                {
-                    "id": ii.get("id"),
-                    "connectionString": ii.get("connectionString")
-                }
-                for ii in response["hits"]
-            ])
+            data_source_data.extend(
+                [
+                    {"id": ii.get("id"), "connectionString": ii.get("connectionString")}
+                    for ii in response["hits"]
+                ]
+            )
             page += 1
             counter = response["count"]
         LOGGER.info("Found %s Data Sources.", counter)
@@ -65,10 +64,10 @@ class DataSourceStream(BaseStream):
 
 
 class DataSourceSubscriptionStream(DataSourceStream):
-    API_METHOD = 'GET'
-    TABLE = 'data_source_subscription'
-    KEY_PROPERTIES = ['data_source_id', 'profile']
-    RESPONSE_RESULT_KEY="users"
+    API_METHOD = "GET"
+    TABLE = "data_source_subscription"
+    KEY_PROPERTIES = ["data_source_id", "profile"]
+    RESPONSE_RESULT_KEY = "users"
     IS_SELECTED_BY_DEFAULT = True
 
     CACHE_RESULTS = True
@@ -103,10 +102,11 @@ class DataSourceSubscriptionStream(DataSourceStream):
         save_state(self.state)
         return self.state
 
+
 class DataSourceDictionaryStream(DataSourceStream):
-    API_METHOD = 'GET'
-    TABLE = 'data_source_dictionary'
-    KEY_PROPERTIES = ['dataSource']
+    API_METHOD = "GET"
+    TABLE = "data_source_dictionary"
+    KEY_PROPERTIES = ["dataSource"]
 
     CACHE_RESULTS = True
 
