@@ -53,7 +53,10 @@ class ChildStream(ImmutaStream):
         """Return a list of partition key dicts (if applicable), otherwise None."""
         if "{data_source_id}" in self.path:
             data_source_list = self._get_all_data_source_ids()
-            return [{"data_source_id": ds["id"], "connectionString": ds["connectionString"]} for ds in data_source_list]
+            return [
+                {"data_source_id": ds["id"], "connectionString": ds["connectionString"]}
+                for ds in data_source_list
+            ]
         if "{project_id}" in self.path:
             project_list = self._get_all_project_ids()
             return [{"project_id": id} for id in project_list]
