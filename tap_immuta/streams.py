@@ -53,7 +53,7 @@ class ChildStream(ImmutaStream):
         """Return a list of partition key dicts (if applicable), otherwise None."""
         if "{data_source_id}" in self.path:
             data_source_list = self._get_all_data_source_ids()
-            return [{"data_source_id": ds["id"]} for ds in data_source_list]
+            return [{"data_source_id": ds["id"], "connectionString": ds["connectionString"]} for ds in data_source_list]
         if "{project_id}" in self.path:
             project_list = self._get_all_project_ids()
             return [{"project_id": id} for id in project_list]
@@ -96,6 +96,12 @@ class ChildStream(ImmutaStream):
             page += 1
             counter = response["count"]
         return project_list
+
+    def post_process(self, row: dict, partition: Optional[dict] = None) -> dict:
+        """Append the partition keys to the record."""
+        for ii in partition.keys():
+            row[ii] = partition[ii]
+        return row
 
 
 class DataSourceStream(ChildStream):
