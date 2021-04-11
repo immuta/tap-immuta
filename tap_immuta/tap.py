@@ -18,6 +18,9 @@ from singer_sdk.typing import (
 
 from tap_immuta.streams import (
     ImmutaStream,
+    DataSourceStream,
+    DataSourceDictionaryStream,
+    DataSourceSubscriptionStream,
     GlobalPolicyStream,
     GroupStream,
     PurposeStream,
@@ -27,6 +30,9 @@ from tap_immuta.streams import (
 
 
 STREAM_TYPES = [
+    DataSourceStream,
+    DataSourceDictionaryStream,
+    DataSourceSubscriptionStream,
     GlobalPolicyStream,
     GroupStream,
     PurposeStream,
@@ -44,6 +50,7 @@ class TapImmuta(Tap):
         Property("immuta_host", StringType, required=True),
         Property("api_key", StringType, required=True),
         Property("start_date", DateTimeType),
+        Property("user_agent", StringType, default="tap-immuta@immuta.com"),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:

@@ -11,7 +11,7 @@ setuptools.setup(
     py_modules=["tap_immuta"],
     entry_points="""
         [console_scripts]
-        tap-immuta=tap_immuta:main
+        tap-immuta=tap_immuta.tap:cli
     """,
     packages=setuptools.find_packages(),
     package_data={"schemas": ["tap_immuta/schemas/*.json"]},

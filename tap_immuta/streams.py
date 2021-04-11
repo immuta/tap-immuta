@@ -47,17 +47,78 @@ class ImmutaStream(RESTStream):
                 yield row
 
 
+class ChildStream(ImmutaStream):
+    @property
+    def partitions(self) -> List[dict]:
+        """Return a list of partition key dicts (if applicable), otherwise None."""
+        if "{data_source_id}" in self.path:
+            data_source_list = self._get_all_data_source_ids()
+            return [{"data_source_id": ds["id"]} for ds in data_source_list]
+        if "{iam_id}" in self.path:
+            iam_list = ["bim"]
+            return [{"iam_id": id} for id in iam_list]
+        raise ValueError(
+            "Could not detect partition type for Gitlab stream "
+            f"'{self.name}' ({self.path}). "
+        )
+
+    def _get_all_data_source_ids(self):
+        page = 0
+        counter = 99999
+        url = f"{self.url_base}/dataSource"
+        data_source_data = []
+        while len(data_source_data) < counter:
+            params = {"offset": page, "size": 2000}
+            response = self._requests_session.get(
+                url, headers=self.http_headers, params=params
+            ).json()
+            for ii in response["hits"]:
+                details = {
+                    "id": ii.get("id"),
+                    "connectionString": ii.get("connectionString"),
+                }
+                data_source_data.append(details)
+            page += 1
+            counter = response["count"]
+        return data_source_data
+
+
+class DataSourceStream(ChildStream):
+    name = "data_source"
+    path = "/dataSource/{data_source_id}"
+    primary_keys = ["id"]
+
+    schema_filepath = SCHEMAS_DIR / "data_source.json"
+
+
+class DataSourceDictionaryStream(ChildStream):
+    name = "data_source_dictionary"
+    path = "/dictionary/{data_source_id}"
+    primary_keys = ["dataSource"]
+
+    schema_filepath = SCHEMAS_DIR / "data_source_dictionary.json"
+
+
+class DataSourceSubscriptionStream(ChildStream):
+    name = "data_source_subscription"
+    path = "/dataSource/{data_source_id}/access"
+    primary_keys = ["data_source_id", "profile"]
+    response_result_key = "users"
+
+    schema_filepath = SCHEMAS_DIR / "data_source_subscription.json"
+
+
 class GlobalPolicyStream(ImmutaStream):
     name = "global_policy"
     path = "/policy/global"
     primary_keys = ["id"]
 
-    schema_filepath = SCHEMAS_DIR / "group.json"
+    schema_filepath = SCHEMAS_DIR / "global_policy.json"
 
 
-class GroupStream(ImmutaStream):
+class GroupStream(ChildStream):
     name = "group"
-    path = "/bim/group"
+    path = "/{iam_id}/group"
     primary_keys = ["id"]
     response_result_key = "hits"
 
@@ -81,9 +142,9 @@ class TagStream(ImmutaStream):
     schema_filepath = SCHEMAS_DIR / "tag.json"
 
 
-class UserStream(ImmutaStream):
+class UserStream(ChildStream):
     name = "user"
-    path = "/bim/user"
+    path = "/{iam_id}/user"
     primary_keys = ["id"]
     response_result_key = "hits"
 
