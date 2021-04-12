@@ -45,7 +45,6 @@ tap-immuta --config CONFIG --discover > ./catalog.json
 tap-immuta --config CONFIG --catalog ./catalog.json
 ```
 
-
 ### Create and Run Tests
 
 Create tests within the `tap_immuta/tests` subfolder and

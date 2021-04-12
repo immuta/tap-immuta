@@ -5,19 +5,13 @@ from typing import List
 
 from singer_sdk import Tap, Stream
 from singer_sdk.typing import (
-    ArrayType,
-    BooleanType,
     DateTimeType,
-    IntegerType,
-    NumberType,
-    ObjectType,
     PropertiesList,
     Property,
     StringType,
 )
 
 from tap_immuta.streams import (
-    ImmutaStream,
     DataSourceStream,
     DataSourceDictionaryStream,
     DataSourceSubscriptionStream,
