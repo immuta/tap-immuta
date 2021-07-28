@@ -24,17 +24,6 @@ class ImmutaStream(RESTStream):
         """Return the API URL root, configurable via tap settings."""
         return self.config["immuta_host"]
 
-    def get_url_params(
-        self, partition: Optional[dict], next_page_token: Optional[Any] = None
-    ) -> Dict[str, Any]:
-        """Return a dictionary of values to be used in URL parameterization.
-
-        If paging is supported, developers may override this method with specific paging
-        logic.
-        """
-        params = {}
-        return params
-
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         resp_json = response.json()
