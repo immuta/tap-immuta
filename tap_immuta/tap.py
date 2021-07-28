@@ -12,6 +12,8 @@ from singer_sdk.typing import (
 )
 
 from tap_immuta.streams import (
+    DataSourceBaseStream,
+    ProjectBaseStream,
     DataSourceStream,
     DataSourceDictionaryStream,
     DataSourceSubscriptionStream,
@@ -28,6 +30,8 @@ from tap_immuta.streams import (
 
 
 STREAM_TYPES = [
+    DataSourceBaseStream,
+    ProjectBaseStream,
     DataSourceStream,
     DataSourceDictionaryStream,
     DataSourceSubscriptionStream,

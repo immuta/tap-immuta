@@ -1,10 +1,13 @@
 """Stream class for tap-immuta."""
 
 import requests
+import copy
+import math
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
+from typing import Any, Dict, Optional, Union, List, Iterable, cast
 from singer_sdk.streams import RESTStream
+from singer_sdk import typing as th  # JSON Schema typing helpers
 
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -12,8 +15,7 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class ImmutaStream(RESTStream):
     """Immuta stream class."""
-
-    response_result_key = None
+    _page_size = 200
 
     @property
     def http_headers(self) -> dict:
@@ -21,102 +23,114 @@ class ImmutaStream(RESTStream):
 
     @property
     def url_base(self) -> str:
-        """Return the API URL root, configurable via tap settings."""
         return self.config["immuta_host"]
 
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        """Parse the response and return an iterator of result rows."""
-        resp_json = response.json()
-        if self.response_result_key:
-            resp_json = resp_json.get(self.response_result_key, {})
-        if isinstance(resp_json, dict):
-            yield resp_json
-        else:
-            for row in resp_json:
-                yield row
 
+class ParentBaseStream(ImmutaStream):
+    primary_keys = ["id"]
+    records_jsonpath = "$.hits[*]"
 
-class ChildStream(ImmutaStream):
     @property
-    def partitions(self) -> List[dict]:
-        """Return a list of partition key dicts (if applicable), otherwise None."""
-        if "{data_source_id}" in self.path:
-            data_source_list = self._get_all_data_source_ids()
-            return [
-                {"data_source_id": ds["id"], "connectionString": ds["connectionString"]}
-                for ds in data_source_list
-            ]
-        if "{project_id}" in self.path:
-            project_list = self._get_all_project_ids()
-            return [{"project_id": id} for id in project_list]
-        raise ValueError(
-            "Could not detect partition type for Gitlab stream "
-            f"'{self.name}' ({self.path}). "
-        )
+    def selected(self):
+        "This is a utility stream that should not be selected."
+        return False
 
-    def _get_all_data_source_ids(self):
-        page = 0
-        counter = 99999
-        url = f"{self.url_base}/dataSource"
-        data_source_data = []
-        while len(data_source_data) < counter:
-            params = {"offset": page, "size": 2000}
-            response = self._requests_session.get(
-                url, headers=self.http_headers, params=params
-            ).json()
-            for ii in response["hits"]:
-                details = {
-                    "id": ii.get("id"),
-                    "connectionString": ii.get("connectionString"),
-                }
-                data_source_data.append(details)
-            page += 1
-            counter = response["count"]
-        return data_source_data
+    def get_next_page_token(self, response, previous_token):
+        """
+        Return a token for identifying next page or None if no more pages.
+        The offset is the number of projects that should be skipped (not the page).
+        """
+        current_page = (previous_token or 0) / self._page_size
+        total_pages = math.ceil(response.json()["count"] / self._page_size)
+        self.logger.info(f"Traversed page {current_page} of {total_pages}.")
+        if current_page < total_pages:
+            next_page_token = (current_page + 1) * self._page_size
+            self.logger.debug(f"Next page token retrieved: {next_page_token}")
+            return next_page_token
+        return None
 
-    def _get_all_project_ids(self):
-        page = 0
-        counter = 99999
-        url = f"{self.url_base}/project"
-        project_list = []
-        while len(project_list) < counter:
-            params = {"offset": page, "size": 200}
-            response = self._requests_session.get(
-                url, headers=self.http_headers, params=params
-            ).json()
-            project_list.extend([ii.get("id") for ii in response["hits"]])
-            page += 1
-            counter = response["count"]
-        return project_list
-
-    def post_process(self, row: dict, partition: Optional[dict] = None) -> dict:
-        """Append the partition keys to the record."""
-        for ii in partition.keys():
-            row[ii] = partition[ii]
-        return row
+    def get_url_params(self, context, next_page_token):
+        """Return a dictionary of values to be used in URL parameterization."""
+        params = {
+            "size": self._page_size,
+            "offset": 1
+        }
+        if next_page_token:
+            params["offset"] = next_page_token
+        return params
 
 
-class DataSourceStream(ChildStream):
+class DataSourceBaseStream(ParentBaseStream):
+    name = "data_source_base"
+    path = "/dataSource"
+
+    schema = th.PropertiesList(
+        th.Property("id", th.IntegerType),
+        th.Property("connectionString", th.StringType)
+    ).to_dict()
+
+    def get_records(self, context: Optional[dict]):
+        "Overwrite default method to return both the record and child context."
+        for row in self.request_records(context):
+            row = self.post_process(row, context)
+            child_context = {
+                "data_source_id": row["id"],
+                "connectionString": row["connectionString"]
+            }
+            yield (row, child_context)
+
+
+class ProjectBaseStream(ParentBaseStream):
+    name = "project_base"
+    path = "/project"
+    primary_keys = ["id"]
+    records_jsonpath = "$.hits[*]"
+
+    schema = th.PropertiesList(
+        th.Property("id", th.IntegerType),
+    ).to_dict()
+
+    def get_records(self, context: Optional[dict]):
+        "Overwrite default method to return both the record and child context."
+        for row in self.request_records(context):
+            row = self.post_process(row, context)
+            child_context = {"project_id": row["id"]}
+            yield (row, child_context)
+
+
+class DataSourceStream(ImmutaStream):
     name = "data_source"
     path = "/dataSource/{data_source_id}"
     primary_keys = ["id"]
+    parent_stream_type = DataSourceBaseStream
+    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "data_source.json"
 
+    def post_process(self, row: dict, context: Optional[dict] = None) -> dict:
+        """Append data source and connection string to record."""
+        row["id"] = context["data_source_id"]
+        row["connection_string"] = context["connectionString"]
+        return row
 
-class DataSourceDictionaryStream(ChildStream):
+
+class DataSourceDictionaryStream(ImmutaStream):
     name = "data_source_dictionary"
     path = "/dictionary/{data_source_id}"
     primary_keys = ["dataSource"]
+    parent_stream_type = DataSourceBaseStream
+    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "data_source_dictionary.json"
 
 
-class DataSourceSubscriptionStream(ChildStream):
+class DataSourceSubscriptionStream(ImmutaStream):
     name = "data_source_subscription"
     path = "/dataSource/{data_source_id}/access"
     primary_keys = ["data_source_id", "profile"]
-    response_result_key = "users"
+    records_jsonpath = "$.users[*]"
+    parent_stream_type = DataSourceBaseStream
+    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "data_source_subscription.json"
 
@@ -133,7 +147,7 @@ class GroupStream(ImmutaStream):
     name = "group"
     path = "/bim/group"
     primary_keys = ["id"]
-    response_result_key = "hits"
+    records_jsonpath = "$.hits[*]"
 
     schema_filepath = SCHEMAS_DIR / "group.json"
 
@@ -146,28 +160,34 @@ class IamStream(ImmutaStream):
     schema_filepath = SCHEMAS_DIR / "iam.json"
 
 
-class ProjectStream(ChildStream):
+class ProjectStream(ImmutaStream):
     name = "project"
     path = "/project/{project_id}"
     primary_keys = ["id"]
+    parent_stream_type = ProjectBaseStream
+    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "project.json"
 
 
-class ProjectDataSourceStream(ChildStream):
+class ProjectDataSourceStream(ImmutaStream):
     name = "project_data_source"
     path = "/project/{project_id}/dataSources"
     primary_keys = ["project_id", "dataSourceId"]
-    response_result_key = "dataSources"
+    records_jsonpath = "$.dataSources[*]"
+    parent_stream_type = ProjectBaseStream
+    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "project_data_source.json"
 
 
-class ProjectMemberStream(ChildStream):
+class ProjectMemberStream(ImmutaStream):
     name = "project_member"
     path = "/project/{project_id}/members"
     primary_keys = ["project_id", "profile"]
-    response_result_key = "members"
+    records_jsonpath = "$.members[*]"
+    parent_stream_type = ProjectBaseStream
+    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "project_member.json"
 
@@ -176,7 +196,7 @@ class PurposeStream(ImmutaStream):
     name = "purpose"
     path = "/governance/purpose"
     primary_keys = ["id"]
-    response_result_key = "purposes"
+    records_jsonpath = "$.purposes[*]"
 
     schema_filepath = SCHEMAS_DIR / "purpose.json"
 
@@ -193,6 +213,6 @@ class UserStream(ImmutaStream):
     name = "user"
     path = "/bim/user"
     primary_keys = ["id"]
-    response_result_key = "hits"
+    records_jsonpath = "$.hits[*]"
 
     schema_filepath = SCHEMAS_DIR / "user.json"
