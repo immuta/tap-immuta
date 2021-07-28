@@ -13,6 +13,7 @@
       },
       "policyHandler": {
           "type": ["null", "object"],
+          "properties": {},
           "additionalProperties": true
       },
       "sqlSchemaName": {
@@ -23,6 +24,7 @@
       },
       "blobHandler": {
         "type": ["null", "object"],
+        "properties": {},
         "additionalProperties": true
       },
       "createdBy": {
@@ -60,11 +62,15 @@
       },
       "subscriptionPolicy": {
         "type": ["null", "object"],
+        "properties": {},
         "additionalProperties": true
       },
       "globalPolicies": {
           "type": ["array", "null"],
-          "items": {"type": "object"},
+          "items": {
+              "type": "object",
+              "properties": {}
+            },
           "addditionalItems": true
       },
       "status": {
@@ -72,6 +78,7 @@
       },
       "statusInfo": {
         "type": ["null", "object"],
+        "properties": {},
         "additionalProperties": true
       },
       "expiration": {
@@ -138,6 +145,7 @@
       },
       "schemaEvolution": {
         "type": ["null", "object"],
+        "properties": {},
         "additionalProperties": true
       }
   },

@@ -36,7 +36,9 @@
             "type": "string"
         },
         "subscriptionPolicy": {
-            "type": ["object", "null"]
+            "type": ["object", "null"],
+            "properties": {},
+            "additionalProperties": true
         },
         "connectionString": {
             "type": "string"

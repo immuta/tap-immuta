@@ -30,7 +30,9 @@
           "type": "string"
       },
       "subscriptionPolicy": {
-          "type": ["object", "null"]
+          "type": ["object", "null"],
+          "properties": {},
+          "additionalProperties": true
       },
       "equalization": {
           "type": ["object", "null"],
@@ -56,6 +58,7 @@
                       },
                       "authorizations": {
                           "type": "object",
+                          "properties": {},
                           "additionalProperties": true
                       }
                   },
@@ -65,10 +68,14 @@
           "additionalProperties": true
       },
       "workspace": {
-          "type": ["object", "null"]
+          "type": ["object", "null"],
+          "properties": {},
+          "additionalProperties": true
       },
       "snowflake": {
-          "type": ["object", "null"]
+          "type": ["object", "null"],
+          "properties": {},
+          "additionalProperties": true
       },
       "createdBy": {
           "type": "integer"
@@ -144,7 +151,9 @@
                               "type": "boolean"
                           },
                           "policyMetadata": {
-                              "type": ["object", "null"]
+                              "type": ["object", "null"],
+                              "properties": {},
+                              "additionalProperties": true
                           },
                           "createdAt": {
                               "type": "string"
