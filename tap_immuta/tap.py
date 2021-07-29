@@ -1,6 +1,5 @@
 """Immuta tap class."""
 
-from pathlib import Path
 from typing import List
 
 from singer_sdk import Tap, Stream
@@ -12,8 +11,6 @@ from singer_sdk.typing import (
 )
 
 from tap_immuta.streams import (
-    DataSourceBaseStream,
-    ProjectBaseStream,
     DataSourceStream,
     DataSourceDictionaryStream,
     DataSourceSubscriptionStream,
@@ -30,8 +27,6 @@ from tap_immuta.streams import (
 
 
 STREAM_TYPES = [
-    DataSourceBaseStream,
-    ProjectBaseStream,
     DataSourceStream,
     DataSourceDictionaryStream,
     DataSourceSubscriptionStream,
@@ -65,5 +60,4 @@ class TapImmuta(Tap):
 
 
 # CLI Execution:
-
 cli = TapImmuta.cli

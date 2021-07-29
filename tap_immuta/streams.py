@@ -30,11 +30,6 @@ class ParentBaseStream(ImmutaStream):
     primary_keys = ["id"]
     records_jsonpath = "$.hits[*]"
 
-    @property
-    def selected(self):
-        "This is a utility stream that should not be selected."
-        return False
-
     def get_next_page_token(self, response, previous_token):
         """
         Return a token for identifying next page or None if no more pages.
@@ -60,14 +55,12 @@ class ParentBaseStream(ImmutaStream):
         return params
 
 
-class DataSourceBaseStream(ParentBaseStream):
-    name = "data_source_base"
+class DataSourceStream(ParentBaseStream):
+    name = "data_source"
     path = "/dataSource"
+    primary_keys = ["id"]
 
-    schema = th.PropertiesList(
-        th.Property("id", th.IntegerType),
-        th.Property("connectionString", th.StringType)
-    ).to_dict()
+    schema_filepath = SCHEMAS_DIR / "data_source.json"
 
     def get_records(self, context: Optional[dict]):
         "Overwrite default method to return both the record and child context."
@@ -78,47 +71,26 @@ class DataSourceBaseStream(ParentBaseStream):
                 "connectionString": row["connectionString"]
             }
             yield (row, child_context)
-
-
-class ProjectBaseStream(ParentBaseStream):
-    name = "project_base"
-    path = "/project"
-    primary_keys = ["id"]
-    records_jsonpath = "$.hits[*]"
-
-    schema = th.PropertiesList(
-        th.Property("id", th.IntegerType),
-    ).to_dict()
-
-    def get_records(self, context: Optional[dict]):
-        "Overwrite default method to return both the record and child context."
-        for row in self.request_records(context):
-            row = self.post_process(row, context)
-            child_context = {"project_id": row["id"]}
-            yield (row, child_context)
-
-
-class DataSourceStream(ImmutaStream):
-    name = "data_source"
-    path = "/dataSource/{data_source_id}"
-    primary_keys = ["id"]
-    parent_stream_type = DataSourceBaseStream
-    ignore_parent_replication_keys = True
-
-    schema_filepath = SCHEMAS_DIR / "data_source.json"
-
+            
     def post_process(self, row: dict, context: Optional[dict] = None) -> dict:
         """Append data source and connection string to record."""
-        row["id"] = context["data_source_id"]
-        row["connection_string"] = context["connectionString"]
-        return row
+        # Get additional data from direct endpoint
+        prepared_request = self.prepare_request(context=context, next_page_token=None)
+        prepared_request.url = f"{self.url_base}/dataSource/{row['id']}"
+        prepared_request.params = {}
+        response = self._request_with_backoff(prepared_request, context)
+
+        # Set emitted record to be the detailed record
+        record  = response.json()
+        record["connectionString"] = row["connectionString"]
+        return record
 
 
 class DataSourceDictionaryStream(ImmutaStream):
     name = "data_source_dictionary"
     path = "/dictionary/{data_source_id}"
     primary_keys = ["dataSource"]
-    parent_stream_type = DataSourceBaseStream
+    parent_stream_type = DataSourceStream
     ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "data_source_dictionary.json"
@@ -129,7 +101,7 @@ class DataSourceSubscriptionStream(ImmutaStream):
     path = "/dataSource/{data_source_id}/access"
     primary_keys = ["data_source_id", "profile"]
     records_jsonpath = "$.users[*]"
-    parent_stream_type = DataSourceBaseStream
+    parent_stream_type = DataSourceStream
     ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "data_source_subscription.json"
@@ -160,22 +132,40 @@ class IamStream(ImmutaStream):
     schema_filepath = SCHEMAS_DIR / "iam.json"
 
 
-class ProjectStream(ImmutaStream):
+class ProjectStream(ParentBaseStream):
     name = "project"
-    path = "/project/{project_id}"
+    path = "/project"
     primary_keys = ["id"]
-    parent_stream_type = ProjectBaseStream
-    ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "project.json"
 
+    def get_records(self, context: Optional[dict]):
+        "Overwrite default method to return both the record and child context."
+        for row in self.request_records(context):
+            row = self.post_process(row, context)
+            child_context = {
+                "project_id": row["id"],
+            }
+            yield (row, child_context)
+
+    def post_process(self, row: dict, context: Optional[dict] = None) -> dict:
+        """Append data source and connection string to record."""
+        # Get additional data from direct endpoint
+        prepared_request = self.prepare_request(context=context, next_page_token=None)
+        prepared_request.url = f"{self.url_base}/project/{row['id']}"
+        prepared_request.params = {}
+        response = self._request_with_backoff(prepared_request, context)
+
+        # Set emitted record to be the detailed record
+        record  = response.json()
+        return record
 
 class ProjectDataSourceStream(ImmutaStream):
     name = "project_data_source"
     path = "/project/{project_id}/dataSources"
     primary_keys = ["project_id", "dataSourceId"]
     records_jsonpath = "$.dataSources[*]"
-    parent_stream_type = ProjectBaseStream
+    parent_stream_type = ProjectStream
     ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "project_data_source.json"
@@ -186,7 +176,7 @@ class ProjectMemberStream(ImmutaStream):
     path = "/project/{project_id}/members"
     primary_keys = ["project_id", "profile"]
     records_jsonpath = "$.members[*]"
-    parent_stream_type = ProjectBaseStream
+    parent_stream_type = ProjectStream
     ignore_parent_replication_keys = True
 
     schema_filepath = SCHEMAS_DIR / "project_member.json"
