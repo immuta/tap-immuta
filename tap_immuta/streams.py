@@ -11,9 +11,6 @@ from tap_immuta import schemas
 from tap_immuta.auth import ImmutaAuthenticator
 
 
-SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
-
 class ImmutaStream(RESTStream):
     """Immuta stream class."""
 

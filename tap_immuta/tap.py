@@ -3,12 +3,7 @@
 from typing import List
 
 from singer_sdk import Tap, Stream
-from singer_sdk.typing import (
-    DateTimeType,
-    PropertiesList,
-    Property,
-    StringType,
-)
+from singer_sdk import typing as th
 
 from tap_immuta.streams import (
     DataSourceStream,
@@ -47,11 +42,11 @@ class TapImmuta(Tap):
 
     name = "tap-immuta"
 
-    config_jsonschema = PropertiesList(
-        Property("immuta_host", StringType, required=True),
-        Property("api_key", StringType, required=True),
-        Property("start_date", DateTimeType),
-        Property("user_agent", StringType, default="tap-immuta@immuta.com"),
+    config_jsonschema = th.PropertiesList(
+        th.Property("immuta_host", th.StringType, required=True),
+        th.Property("api_key", th.StringType, required=True),
+        th.Property("start_date", th.DateTimeType, required=True),
+        th.Property("user_agent", th.StringType, default="tap-immuta"),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:
