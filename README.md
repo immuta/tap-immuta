@@ -10,9 +10,10 @@ Built with the [Singer SDK](https://gitlab.com/meltano/singer-sdk).
 
 ## Installation
 
-This tap is avaiable on PyPi and can be installed using:
+This tap can be installed using:
 
 ```bash
+git clone https://github.com/immuta/tap-immuta.git
 pip install tap-immuta
 ```
 
@@ -21,8 +22,7 @@ pip install tap-immuta
 The following configuration options are available:
 
 - `api_key` (required): User-generated Immuta API Key
-- `immuta_host` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
-- `start_date` (optional): should be used on first sync to indicate how far back to grab records. Start dates should conform to the RFC3339 specification.
+- `hostname` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
 - `user_agent` (optional): should be set to something that includes a contact email address should the API provider need to contact you for any reason.
 
 A full list of supported settings and capabilities for this
@@ -34,13 +34,13 @@ tap-immuta --about
 
 ## Usage
 
-You can easily run `tap-immuta` by itself or in a pipeline using [Meltano](www.meltano.com).
+You can easily run `tap-immuta` by itself or in a pipeline using, for example, [Meltano](www.meltano.com).
 
 ### Executing the Tap Directly
 
+To execute the tap directly, specify the config file, output the catalog, and then run it in sync mode.
+
 ```bash
-tap-immuta --version
-tap-immuta --help
 tap-immuta --config CONFIG --discover > ./catalog.json
 tap-immuta --config CONFIG --catalog ./catalog.json
 ```
@@ -54,7 +54,3 @@ Create tests within the `tap_immuta/tests` subfolder and
 pip install pytest
 pytest tap_immuta/tests
 ```
-
-### Singer SDK Dev Guide
-
-See the [dev guide](../../docs/dev_guide.md) for more instructions on how to use the Singer SDK to develop your own taps and targets.
