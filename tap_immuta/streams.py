@@ -1,13 +1,12 @@
 """Stream class for tap-immuta."""
 
-import requests
-import copy
 import math
 
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable, cast
 from singer_sdk.streams import RESTStream
 from singer_sdk import typing as th  # JSON Schema typing helpers
+from tap_immuta.auth import ImmutaAuthenticator
 
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -18,8 +17,8 @@ class ImmutaStream(RESTStream):
     _page_size = 200
 
     @property
-    def http_headers(self) -> dict:
-        return {"Authorization": self.config.get("api_key")}
+    def authenticator(self):
+        return ImmutaAuthenticator.create_for_stream(self)
 
     @property
     def url_base(self) -> str:

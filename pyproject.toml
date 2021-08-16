@@ -1,11 +1,22 @@
 [tool.poetry]
 name = "tap-immuta"
-version = "0.2.1"
+version = "0.3.1"
 description = "Singer tap for Immuta built with the Meltano SDK for Singer"
 authors = ["Stephen Bailey <stkbailey@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/immuta/tap-immuta"
 packages = [{include = "tap_immuta"}]
+keywords = [
+    "singer",
+    "elt",
+    "replication"
+]
+classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Database"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.6.1,<3.9"
@@ -21,3 +32,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 # CLI declaration
 tap-immuta = 'tap_immuta.tap:TapImmuta.cli'
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
