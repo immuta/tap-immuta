@@ -12,6 +12,6 @@ class ImmutaAuthenticator(SimpleAuthenticator):
         return cls(
             stream=stream,
             auth_headers={
-                {"Authorization": stream.config["api_key"]}
+                "Authorization": stream.config["api_key"]
             }
         )

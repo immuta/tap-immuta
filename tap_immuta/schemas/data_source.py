@@ -42,6 +42,6 @@ schema = th.PropertiesList(
     th.Property("filterId", th.StringType),
     th.Property("subscribers", th.StringType),
     th.Property("tags", th.ArrayType(th.StringType)),
-    th.Property("fingerprintCreatedAt", th.StringType),
+    th.Property("fingerprintCreatedAt", th.DateTimeType),
     th.Property("schemaEvolution", th.ObjectType()),
 ).to_dict()
