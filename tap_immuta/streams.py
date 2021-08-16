@@ -16,6 +16,7 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class ImmutaStream(RESTStream):
     """Immuta stream class."""
+
     _page_size = 200
 
     @property
@@ -47,10 +48,7 @@ class ParentBaseStream(ImmutaStream):
 
     def get_url_params(self, context, next_page_token):
         """Return a dictionary of values to be used in URL parameterization."""
-        params = {
-            "size": self._page_size,
-            "offset": 1
-        }
+        params = {"size": self._page_size, "offset": 1}
         if next_page_token:
             params["offset"] = next_page_token
         return params
@@ -69,10 +67,10 @@ class DataSourceStream(ParentBaseStream):
             row = self.post_process(row, context)
             child_context = {
                 "data_source_id": row["id"],
-                "connectionString": row["connectionString"]
+                "connectionString": row["connectionString"],
             }
             yield (row, child_context)
-            
+
     def post_process(self, row: dict, context: Optional[dict] = None) -> dict:
         """Append data source and connection string to record."""
         # Get additional data from direct endpoint
@@ -82,7 +80,7 @@ class DataSourceStream(ParentBaseStream):
         response = self._request_with_backoff(prepared_request, context)
 
         # Set emitted record to be the detailed record
-        record  = response.json()
+        record = response.json()
         record["connectionString"] = row["connectionString"]
         return record
 
@@ -158,8 +156,9 @@ class ProjectStream(ParentBaseStream):
         response = self._request_with_backoff(prepared_request, context)
 
         # Set emitted record to be the detailed record
-        record  = response.json()
+        record = response.json()
         return record
+
 
 class ProjectDataSourceStream(ImmutaStream):
     name = "project_data_source"

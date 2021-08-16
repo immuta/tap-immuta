@@ -17,11 +17,14 @@ schema = th.PropertiesList(
     th.Property("updatedAt", th.StringType),
     th.Property("approvals", th.ArrayType(th.StringType)),
     th.Property("currentUserCanApprove", th.BooleanType),
-    th.Property("compliance", th.ObjectType(
-        th.Property("isMissingPurposeAcknowledgement", th.BooleanType),
-        th.Property("validationFrequencyExceeded", th.BooleanType),
-        th.Property("isMissingEntitlements", th.BooleanType),
-        th.Property("invalidSubscriptions", th.ArrayType(th.StringType)),
-        th.Property("missingDataSources", th.ArrayType(th.StringType)),
-    )),
+    th.Property(
+        "compliance",
+        th.ObjectType(
+            th.Property("isMissingPurposeAcknowledgement", th.BooleanType),
+            th.Property("validationFrequencyExceeded", th.BooleanType),
+            th.Property("isMissingEntitlements", th.BooleanType),
+            th.Property("invalidSubscriptions", th.ArrayType(th.StringType)),
+            th.Property("missingDataSources", th.ArrayType(th.StringType)),
+        ),
+    ),
 ).to_dict()

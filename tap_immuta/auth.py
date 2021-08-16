@@ -10,8 +10,5 @@ class ImmutaAuthenticator(SimpleAuthenticator):
     @classmethod
     def create_for_stream(cls, stream) -> "ImmutaAuthenticator":
         return cls(
-            stream=stream,
-            auth_headers={
-                "Authorization": stream.config["api_key"]
-            }
+            stream=stream, auth_headers={"Authorization": stream.config["api_key"]}
         )

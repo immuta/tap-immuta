@@ -11,16 +11,22 @@ schema = th.PropertiesList(
     th.Property("allowMaskedJoins", th.BooleanType),
     th.Property("subscriptionType", th.StringType),
     th.Property("subscriptionPolicy", th.ObjectType()),
-    th.Property("equalization", th.ObjectType(
-        th.Property("setNone", th.BooleanType),
-        th.Property("createdAt", th.StringType),
-        th.Property("recommended", th.StringType),
-        th.Property("validationFrequency", th.IntegerType),
-        th.Property("authsForPolicyHandler", th.ObjectType(
-            th.Property("groups", th.ArrayType(th.StringType)),
-            th.Property("authorizations", th.ObjectType()),
-        )),
-    )),
+    th.Property(
+        "equalization",
+        th.ObjectType(
+            th.Property("setNone", th.BooleanType),
+            th.Property("createdAt", th.StringType),
+            th.Property("recommended", th.StringType),
+            th.Property("validationFrequency", th.IntegerType),
+            th.Property(
+                "authsForPolicyHandler",
+                th.ObjectType(
+                    th.Property("groups", th.ArrayType(th.StringType)),
+                    th.Property("authorizations", th.ObjectType()),
+                ),
+            ),
+        ),
+    ),
     th.Property("workspace", th.ObjectType()),
     th.Property("snowflake", th.ObjectType()),
     th.Property("createdBy", th.IntegerType),

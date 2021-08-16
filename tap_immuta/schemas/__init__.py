@@ -1,7 +1,9 @@
 from tap_immuta.schemas.audit import schema as audit
 from tap_immuta.schemas.data_source import schema as data_source
 from tap_immuta.schemas.data_source_dictionary import schema as data_source_dictionary
-from tap_immuta.schemas.data_source_subscription import schema as data_source_subscription
+from tap_immuta.schemas.data_source_subscription import (
+    schema as data_source_subscription,
+)
 from tap_immuta.schemas.global_policy import schema as global_policy
 from tap_immuta.schemas.group import schema as group
 from tap_immuta.schemas.iam import schema as iam

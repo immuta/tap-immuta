@@ -11,12 +11,15 @@ schema = th.PropertiesList(
     th.Property("updatedAt", th.StringType),
     th.Property("userid", th.StringType),
     th.Property("permissions", th.ArrayType(th.StringType)),
-    th.Property("profile", th.ObjectType(
-        th.Property("createdAt", th.StringType),
-        th.Property("email", th.StringType),
-        th.Property("id", th.IntegerType),
-        th.Property("name", th.StringType),
-        th.Property("systemGenerated", th.BooleanType),
-        th.Property("updatedAt", th.StringType),
-    )),
+    th.Property(
+        "profile",
+        th.ObjectType(
+            th.Property("createdAt", th.StringType),
+            th.Property("email", th.StringType),
+            th.Property("id", th.IntegerType),
+            th.Property("name", th.StringType),
+            th.Property("systemGenerated", th.BooleanType),
+            th.Property("updatedAt", th.StringType),
+        ),
+    ),
 ).to_dict()
