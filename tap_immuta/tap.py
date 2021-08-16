@@ -43,7 +43,7 @@ class TapImmuta(Tap):
     name = "tap-immuta"
 
     config_jsonschema = th.PropertiesList(
-        th.Property("immuta_host", th.StringType, required=True),
+        th.Property("hostname", th.StringType, required=True),
         th.Property("api_key", th.StringType, required=True),
         th.Property("user_agent", th.StringType, default="tap-immuta"),
     ).to_dict()

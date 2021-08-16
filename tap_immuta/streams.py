@@ -22,7 +22,7 @@ class ImmutaStream(RESTStream):
 
     @property
     def url_base(self) -> str:
-        return self.config["immuta_host"]
+        return self.config["hostname"]
 
 
 class ParentBaseStream(ImmutaStream):

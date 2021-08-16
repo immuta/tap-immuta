@@ -22,7 +22,7 @@ pip install tap-immuta
 The following configuration options are available:
 
 - `api_key` (required): User-generated Immuta API Key
-- `immuta_host` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
+- `hostname` (required): Immuta hostname, e.g. `https://my-immuta.my-domain.com`
 - `user_agent` (optional): should be set to something that includes a contact email address should the API provider need to contact you for any reason.
 
 A full list of supported settings and capabilities for this

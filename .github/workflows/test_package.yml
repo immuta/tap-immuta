@@ -4,7 +4,7 @@ on: push
 
 env:
   TAP_IMMUTA_API_KEY: ${{ secrets.tap_clockify_api_key }}
-  TAP_IMMUTA_IMMUTA_HOST: ${{ secrets.tap_clockify_workspace }}
+  TAP_IMMUTA_HOSTNAME: ${{ secrets.tap_clockify_workspace }}
 
 jobs:
   test_package:

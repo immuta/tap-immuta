@@ -8,12 +8,12 @@ from tap_immuta.tap import TapImmuta
 
 SAMPLE_CONFIG = {
     "api_key": "myImmutaApiKey",
-    "immuta_host": "https://myinstance.cloud.immuta.com",
+    "hostname": "https://myinstance.cloud.immuta.com",
 }
 
 INTEGRATION_CONFIG = {
     "api_key": os.environ.get("TAP_IMMUTA_API_KEY"),
-    "immuta_host": os.environ.get("TAP_IMMUTA_IMMUTA_HOST"),
+    "hostname": os.environ.get("TAP_IMMUTA_HOSTNAME"),
 }
 
 
