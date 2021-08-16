@@ -55,7 +55,6 @@ class DataSourceStream(ParentBaseStream):
     name = "data_source"
     path = "/dataSource"
     primary_keys = ["id"]
-
     schema = schemas.data_source
 
     def get_records(self, context: Optional[dict]):
