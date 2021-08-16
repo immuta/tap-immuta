@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable, cast
 from singer_sdk.streams import RESTStream
 from singer_sdk import typing as th  # JSON Schema typing helpers
+
+from tap_immuta import schemas
 from tap_immuta.auth import ImmutaAuthenticator
 
 
@@ -59,7 +61,7 @@ class DataSourceStream(ParentBaseStream):
     path = "/dataSource"
     primary_keys = ["id"]
 
-    schema_filepath = SCHEMAS_DIR / "data_source.json"
+    schema = schemas.data_source
 
     def get_records(self, context: Optional[dict]):
         "Overwrite default method to return both the record and child context."
@@ -92,7 +94,7 @@ class DataSourceDictionaryStream(ImmutaStream):
     parent_stream_type = DataSourceStream
     ignore_parent_replication_keys = True
 
-    schema_filepath = SCHEMAS_DIR / "data_source_dictionary.json"
+    schema = schemas.data_source_dictionary
 
 
 class DataSourceSubscriptionStream(ImmutaStream):
@@ -103,7 +105,7 @@ class DataSourceSubscriptionStream(ImmutaStream):
     parent_stream_type = DataSourceStream
     ignore_parent_replication_keys = True
 
-    schema_filepath = SCHEMAS_DIR / "data_source_subscription.json"
+    schema = schemas.data_source_subscription
 
 
 class GlobalPolicyStream(ImmutaStream):
@@ -111,7 +113,7 @@ class GlobalPolicyStream(ImmutaStream):
     path = "/policy/global"
     primary_keys = ["id"]
 
-    schema_filepath = SCHEMAS_DIR / "global_policy.json"
+    schema = schemas.global_policy
 
 
 class GroupStream(ImmutaStream):
@@ -120,7 +122,7 @@ class GroupStream(ImmutaStream):
     primary_keys = ["id"]
     records_jsonpath = "$.hits[*]"
 
-    schema_filepath = SCHEMAS_DIR / "group.json"
+    schema = schemas.group
 
 
 class IamStream(ImmutaStream):
@@ -128,7 +130,7 @@ class IamStream(ImmutaStream):
     path = "/bim/iam"
     primary_keys = ["id"]
 
-    schema_filepath = SCHEMAS_DIR / "iam.json"
+    schema = schemas.iam
 
 
 class ProjectStream(ParentBaseStream):
@@ -136,7 +138,7 @@ class ProjectStream(ParentBaseStream):
     path = "/project"
     primary_keys = ["id"]
 
-    schema_filepath = SCHEMAS_DIR / "project.json"
+    schema = schemas.project
 
     def get_records(self, context: Optional[dict]):
         "Overwrite default method to return both the record and child context."
@@ -167,7 +169,7 @@ class ProjectDataSourceStream(ImmutaStream):
     parent_stream_type = ProjectStream
     ignore_parent_replication_keys = True
 
-    schema_filepath = SCHEMAS_DIR / "project_data_source.json"
+    schema = schemas.project_data_source
 
 
 class ProjectMemberStream(ImmutaStream):
@@ -178,7 +180,7 @@ class ProjectMemberStream(ImmutaStream):
     parent_stream_type = ProjectStream
     ignore_parent_replication_keys = True
 
-    schema_filepath = SCHEMAS_DIR / "project_member.json"
+    schema = schemas.project_member
 
 
 class PurposeStream(ImmutaStream):
@@ -187,7 +189,7 @@ class PurposeStream(ImmutaStream):
     primary_keys = ["id"]
     records_jsonpath = "$.purposes[*]"
 
-    schema_filepath = SCHEMAS_DIR / "purpose.json"
+    schema = schemas.purpose
 
 
 class TagStream(ImmutaStream):
@@ -195,7 +197,7 @@ class TagStream(ImmutaStream):
     path = "/tag"
     primary_keys = ["id"]
 
-    schema_filepath = SCHEMAS_DIR / "tag.json"
+    schema = schemas.tag
 
 
 class UserStream(ImmutaStream):
@@ -204,4 +206,4 @@ class UserStream(ImmutaStream):
     primary_keys = ["id"]
     records_jsonpath = "$.hits[*]"
 
-    schema_filepath = SCHEMAS_DIR / "user.json"
+    schema = schemas.user
