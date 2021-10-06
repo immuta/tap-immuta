@@ -10,7 +10,7 @@ class ImmutaStream(RESTStream):
     @property
     def authenticator(self):
         return APIKeyAuthenticator.create_for_stream(
-            self, key="Authorization", value=self.config["api_key"]
+            self, key="Authorization", value=self.config["api_key"], location="header"
         )
 
     @property
