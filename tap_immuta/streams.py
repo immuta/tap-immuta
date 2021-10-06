@@ -2,7 +2,6 @@
 
 import math
 
-from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable, cast
 from singer_sdk import typing as th  # JSON Schema typing helpers
 

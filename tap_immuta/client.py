@@ -1,5 +1,5 @@
 from singer_sdk.streams import RESTStream
-from tap_immuta.auth import ImmutaAuthenticator
+from singer_sdk.authenticators import APIKeyAuthenticator
 
 
 class ImmutaStream(RESTStream):
@@ -9,7 +9,9 @@ class ImmutaStream(RESTStream):
 
     @property
     def authenticator(self):
-        return ImmutaAuthenticator.create_for_stream(self)
+        return APIKeyAuthenticator.create_for_stream(
+            self, key="Authorization", value=self.config["api_key"]
+        )
 
     @property
     def url_base(self) -> str:
