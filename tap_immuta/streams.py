@@ -186,3 +186,20 @@ class UserStream(ImmutaStream):
     records_jsonpath = "$.hits[*]"
 
     schema = schemas.user
+
+class AuditStream(ImmutaStream):
+    name = "audit"
+    path = "/bim/user"
+    primary_keys = ["id"]
+    records_jsonpath = "$.hits[*]"
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["Size"] = self._page_size
+        params["RecordType"] = [
+            t for t in schemas.AUDIT_RECORD_TYPES if t != 'auditQuery'
+        ]
+        params["MinDate"] = self.get_starting_timestamp()
+        params["SortField"] = "DateTime"
+        params["SortOrder"] = "asc"
+    schema = schemas.user

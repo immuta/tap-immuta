@@ -1,4 +1,5 @@
 from tap_immuta.schemas.audit import schema as audit
+from tap_immuta.schemas.audit import AUDIT_RECORD_TYPES
 from tap_immuta.schemas.data_source import schema as data_source
 from tap_immuta.schemas.data_source_dictionary import schema as data_source_dictionary
 from tap_immuta.schemas.data_source_subscription import (
