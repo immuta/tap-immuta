@@ -71,7 +71,6 @@ class DataSourceDictionaryStream(ImmutaStream):
     primary_keys = ["dataSource"]
     parent_stream_type = DataSourceStream
     ignore_parent_replication_keys = True
-
     schema = schemas.data_source_dictionary
 
 
@@ -82,7 +81,6 @@ class DataSourceSubscriptionStream(ImmutaStream):
     records_jsonpath = "$.users[*]"
     parent_stream_type = DataSourceStream
     ignore_parent_replication_keys = True
-
     schema = schemas.data_source_subscription
 
 
@@ -90,7 +88,6 @@ class GlobalPolicyStream(ImmutaStream):
     name = "global_policy"
     path = "/policy/global"
     primary_keys = ["id"]
-
     schema = schemas.global_policy
 
 
@@ -99,7 +96,6 @@ class GroupStream(ImmutaStream):
     path = "/bim/group"
     primary_keys = ["id"]
     records_jsonpath = "$.hits[*]"
-
     schema = schemas.group
 
 
@@ -107,7 +103,6 @@ class IamStream(ImmutaStream):
     name = "iam"
     path = "/bim/iam"
     primary_keys = ["id"]
-
     schema = schemas.iam
 
 
@@ -147,7 +142,6 @@ class ProjectDataSourceStream(ImmutaStream):
     records_jsonpath = "$.dataSources[*]"
     parent_stream_type = ProjectStream
     ignore_parent_replication_keys = True
-
     schema = schemas.project_data_source
 
 
@@ -158,7 +152,6 @@ class ProjectMemberStream(ImmutaStream):
     records_jsonpath = "$.members[*]"
     parent_stream_type = ProjectStream
     ignore_parent_replication_keys = True
-
     schema = schemas.project_member
 
 
@@ -167,15 +160,13 @@ class PurposeStream(ImmutaStream):
     path = "/governance/purpose"
     primary_keys = ["id"]
     records_jsonpath = "$.purposes[*]"
-
     schema = schemas.purpose
 
 
 class TagStream(ImmutaStream):
     name = "tag"
     path = "/tag"
-    primary_keys = ["name", "source"]
-
+    primary_keys = ["id"]
     schema = schemas.tag
 
 

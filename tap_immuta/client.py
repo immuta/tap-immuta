@@ -1,3 +1,5 @@
+from typing import Optional
+
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import APIKeyAuthenticator
 
@@ -16,3 +18,8 @@ class ImmutaStream(RESTStream):
     @property
     def url_base(self) -> str:
         return self.config["hostname"]
+
+    def post_process(self, row: dict, context: Optional[dict] = None) -> dict:
+        if any(row.get(k) == None for k in self.primary_keys):
+            return None
+        return row
