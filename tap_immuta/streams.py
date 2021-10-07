@@ -174,7 +174,7 @@ class PurposeStream(ImmutaStream):
 class TagStream(ImmutaStream):
     name = "tag"
     path = "/tag"
-    primary_keys = ["id"]
+    primary_keys = ["name", "source"]
 
     schema = schemas.tag
 
