@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-immuta"
-version = "0.3.1"
+version = "0.3.2"
 description = "Singer tap for Immuta built with the Meltano SDK for Singer"
 authors = ["Stephen Bailey <stkbailey@gmail.com>"]
 license = "MIT"
@@ -19,7 +19,7 @@ classifiers=[
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6.2,<3.9"
+python = ">=3.6.2,<3.10"
 singer-sdk = "^0.3"
 
 [tool.poetry.dev-dependencies]
