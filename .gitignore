@@ -136,3 +136,4 @@ catalog.json
 config.json
 state.json
 data.json
+.DS_Store

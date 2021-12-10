@@ -57,7 +57,9 @@ class DataSourceStream(ParentBaseStream):
         prepared_request = self.prepare_request(context=context, next_page_token=None)
         prepared_request.url = f"{self.url_base}/dataSource/{row['id']}"
         prepared_request.params = {}
-        response = self._request_with_backoff(prepared_request, context)
+
+        decorated_request = self.request_decorator(self._request)
+        response = decorated_request(prepared_request, context)
 
         # Set emitted record to be the detailed record
         record = response.json()
@@ -133,7 +135,9 @@ class ProjectStream(ParentBaseStream):
         prepared_request = self.prepare_request(context=context, next_page_token=None)
         prepared_request.url = f"{self.url_base}/project/{row['id']}"
         prepared_request.params = {}
-        response = self._request_with_backoff(prepared_request, context)
+
+        decorated_request = self.request_decorator(self._request)
+        response = decorated_request(prepared_request, context)
 
         # Set emitted record to be the detailed record
         record = response.json()
